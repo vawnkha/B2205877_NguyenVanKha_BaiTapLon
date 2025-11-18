@@ -1,12 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const docgia = require("../controllers/reader.controller");
+const reader = require("../controllers/reader.controller");
 
-router.post("/", docgia.create);
-router.get("/", docgia.findAll);
-router.get("/:id", docgia.findOne);
-router.put("/:id", docgia.update);
-router.delete("/:id", docgia.delete);
-router.delete("/", docgia.deleteAll);
+router.route("/")
+    .get(reader.findAll)
+    .post(reader.create)
+    .delete(reader.deleteAll);
+router.route("/:id")
+    .get(reader.findOne)
+    .put(reader.update)
+    .delete(reader.delete);
 
 module.exports = router;

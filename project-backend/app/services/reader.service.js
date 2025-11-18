@@ -50,6 +50,12 @@ class ReaderService {
         return await this.Reader.findOne({ MaDocGia: madocgia });
     }
 
+    async findById(id) {
+        return await this.Reader.findOne({
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
+        });
+    }
+
     async update(id, payload) {
         const filter = {
             _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
