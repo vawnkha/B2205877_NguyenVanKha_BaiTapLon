@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const readerRoute = require("./app/routes/reader.route");
 const employeeRoute = require("./app/routes/employee.route");
+
+const login = require("./app/routes/auth.route");
 const ApiError = require("./app/api-error");
 
 const app = express();
@@ -12,6 +14,8 @@ app.use(express.json());
 
 app.use("/api/doc-gia", readerRoute);
 app.use("/api/nhan-vien", employeeRoute);
+
+app.use("/api/login", login);
 
 app.get("/", (req, res) => {
     res.json({ message: "welcome to library application."});
