@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-// router
+const readerRoute = require("./app/routes/reader.route");
 const ApiError = require("./app/api-error");
 
 const app = express();
@@ -9,7 +9,7 @@ app.use(cors());
 
 app.use(express.json());
 
-// api
+app.use("/api/docgia", readerRoute);
 
 app.get("/", (req, res) => {
     res.json({ message: "welcome to library application."});

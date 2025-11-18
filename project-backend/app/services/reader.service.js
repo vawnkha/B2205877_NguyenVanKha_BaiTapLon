@@ -1,12 +1,14 @@
+const { ObjectId } = require("mongodb");
 const bcrypt = require("bcryptjs");
 
 class ReaderService {
     constructor(client) {
-        this.DocGia = client.db().collection("docgia");
+        this.Reader = client.db().collection("docgia");
+        this.Reader.createIndex({ MaDocGia: 1 }, { unique: true });
     }
 
     extractData(payload) {
-        const docgia = {
+        const reader = {
             MaDocGia: payload.MaDocGia,
             HoLot: payload.HoLot,
             Ten: payload.Ten,
@@ -17,11 +19,11 @@ class ReaderService {
             Password: payload.Password,
         };
 
-        Object.keys(docgia).forEach(
-            (key) => docgia[key] === undefined && delete docgia[key]
+        Object.keys(reader).forEach(
+            (key) => reader[key] === undefined && delete reader[key]
         );
 
-        return docgia;
+        return reader;
     }
 
     async create(payload) {
@@ -31,12 +33,12 @@ class ReaderService {
             const salt = await bcrypt.genSalt(10);
             data.Password = await bcrypt.hash(data.Password, salt);
         }
-        const result = await this.DocGia.insertOne(data);
+        const result = await this.Reader.insertOne(data);
         return result;
     }
 
     async find(filter) {
-        const cursor = await this.DocGia.find(filter);
+        const cursor = await this.Reader.find(filter);
         return await cursor.toArray();
     }
 
@@ -44,11 +46,14 @@ class ReaderService {
         return await this.find({});
     }
 
-    async findByMaDocGia(madocgia) {
-        return await this.DocGia.findOne({ MaDocGia: madocgia });
+    async findByReader(madocgia) {
+        return await this.Reader.findOne({ MaDocGia: madocgia });
     }
 
-    async update(madocgia, payload) {
+    async update(id, payload) {
+        const filter = {
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
+        };
         const update = this.extractData(payload);
 
         if (update.Password) {
@@ -56,32 +61,35 @@ class ReaderService {
             update.Password = await bcrypt.hash(update.Password, salt);
         }
 
-        const result = await this.DocGia.findOneAndUpdate(
-            { MaDocGia: madocgia },
+        const result = await this.Reader.findOneAndUpdate(
+            filter,
             { $set: update },
             { returnDocument: "after" }
         );
         return result;
     }
 
-    async delete(madocgia) {
-        return await this.DocGia.findOneAndDelete({ MaDocGia: madocgia });
+    async delete(id) {
+        const result = await this.Reader.findOneAndDelete({
+            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
+        });
+        return result;
     }
 
     async deleteAll() {
-        const result = await this.DocGia.deleteMany({});
+        const result = await this.Reader.deleteMany({});
         return result.deletedCount;
     }
 
     async login(MaDocGia, Password) {
-        const docgia = await this.DocGia.findOne({ MaDocGia });
-        if (!docgia) return { success: false, message: "Mã độc giả không tồn tại" };
+        const reader = await this.Reader.findOne({ MaDocGia });
+        if (!reader) return { success: false, message: "Mã độc giả không tồn tại" };
 
-        const isMatch = await bcrypt.compare(Password, docgia.Password);
+        const isMatch = await bcrypt.compare(Password, reader.Password);
         if (!isMatch) return { success: false, message: "Mật khẩu không đúng" };
 
-        const { Password: pw, ...safeData } = docgia;
-        return { success: true, docgia: safeData };
+        const { Password: pw, ...safeData } = reader;
+        return { success: true, reader: safeData };
     }
 }
 
