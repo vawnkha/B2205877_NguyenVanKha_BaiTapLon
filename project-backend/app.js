@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const readerRoute = require("./app/routes/reader.route");
 const employeeRoute = require("./app/routes/employee.route");
+const publisherRoute = require("./app/routes/publisher.route");
+const bookRoute = require("./app/routes/book.route");
 
 const login = require("./app/routes/auth.route");
 const ApiError = require("./app/api-error");
@@ -14,6 +16,8 @@ app.use(express.json());
 
 app.use("/api/doc-gia", readerRoute);
 app.use("/api/nhan-vien", employeeRoute);
+app.use("/api/nha-xuat-ban", publisherRoute);
+app.use("api/sach", bookRoute);
 
 app.use("/api/login", login);
 
