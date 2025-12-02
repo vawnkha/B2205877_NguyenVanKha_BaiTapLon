@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/api/doc-gia", readerRoute);
 app.use("/api/nhan-vien", employeeRoute);
 app.use("/api/nha-xuat-ban", publisherRoute);
-app.use("api/sach", bookRoute);
+app.use("/api/sach", bookRoute);
 app.use("/api/muon-sach", borrowBooksRoute);
 app.use("/api/login", login);
 

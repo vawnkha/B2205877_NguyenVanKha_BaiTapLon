@@ -1,74 +1,63 @@
-const { ObjectId } = require("mongodb");
-
 class PublisherService {
-    constructor(client) {
-        this.Publisher = client.db().collection("nhaxuatban");
-        this.Publisher.createIndex({ MaNXB: 1 }, {unique: true });
-    }
+  constructor(client) {
+    this.Publisher = client.db().collection("nhaxuatban");
+    this.Publisher.createIndex({ MaNXB: 1 }, { unique: true });
+  }
 
-    extractData(payload) {
-        const publisher = {
-            MaNXB: payload.MaNXB,
-            TenNXB: payload.TenNXB,
-            DiaChi: payload.DiaChi,
-        };
+  extractData(payload) {
+    const publisher = {
+      MaNXB: payload.MaNXB,
+      TenNXB: payload.TenNXB,
+      DiaChi: payload.DiaChi,
+    };
 
-        Object.keys(publisher).forEach(
-            (key) => publisher[key] === undefined && delete publisher[key]
-        );
+    Object.keys(publisher).forEach(
+      (key) => publisher[key] === undefined && delete publisher[key]
+    );
 
-        return publisher;
-    }
+    return publisher;
+  }
 
-    async create(payload) {
-        const data = this.extractData(payload);
-        const result = await this.Publisher.insertOne(data);
-        return result;
-    }
+  async create(payload) {
+    const data = this.extractData(payload);
+    const result = await this.Publisher.insertOne(data);
+    return result;
+  }
 
-    async find(filter) {
-        const cursor = await this.Publisher.find(filter);
-        return await cursor.toArray();
-    }
+  async find(filter) {
+    const cursor = await this.Publisher.find(filter);
+    return await cursor.toArray();
+  }
 
-    async findAll() {
-        return await this.find({});
-    }
+  async findAll() {
+    return await this.find({});
+  }
 
-    async findByMaNXB(manxb) {
-        return await this.Publisher.findOne({ MaNXB: manxb});
-    }
+  async findByMaNXB(manxb) {
+    return await this.Publisher.findOne({ MaNXB: manxb });
+  }
 
-    async findById(id) {
-        return await this.Publisher.findOne({
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-        });
-    }
+  async update(manxb, payload) {
+    const update = this.extractData(payload);
+    const result = await this.Publisher.findOneAndUpdate(
+      { MaNXB: manxb },
+      { $set: update },
+      { returnDocument: "after" }
+    );
+    return result;
+  }
 
-    async update(id, payload) {
-        const filter = {
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-        };
-        const update = this.extractData(payload);
-        const result = await this.Publisher.findOneAndUpdate(
-            filter,
-            { $set: update },
-            { returnDocument: "after" }
-        );
-        return result;
-    }
+  async delete(manxb) {
+    const result = await this.Publisher.findOneAndDelete({
+      MaNXB: manxb,
+    });
+    return result;
+  }
 
-    async delete(id) {
-        const result = await this.Publisher.findOneAndDelete({
-            _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
-        });
-        return result;
-    }
-
-    async deleteAll() {
-        const result = await this.Publisher.deleteMany({});
-        return result.deleteCount;
-    }
+  async deleteAll() {
+    const result = await this.Publisher.deleteMany({});
+    return result.deleteCount;
+  }
 }
 
 module.exports = PublisherService;

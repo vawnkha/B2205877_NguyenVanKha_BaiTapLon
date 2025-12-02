@@ -50,8 +50,8 @@
 
 <script>
 import SachForm from "@/components/BookForm.vue";
-import SachService from "@/services/book.service";
-import NhaXuatBanService from "@/services/publisher.service";
+import BookService from "@/services/book.service";
+import PublisherService from "@/services/publisher.service";
 import InputSearch from "@/components/InputSearch.vue";
 
 export default {
@@ -79,13 +79,13 @@ export default {
   },
   methods: {
     async fetchSachs() {
-      const data = await SachService.getAll();
+      const data = await BookService.getAll();
       this.allSachs = data;
       this.sachs = data;
     },
     async fetchNXBs() {
       try {
-        this.dsNXB = await NhaXuatBanService.getAll();
+        this.dsNXB = await PublisherService.getAll();
       } catch (error) {
         console.error("Lỗi khi lấy NXB:", error);
       }
@@ -105,7 +105,7 @@ export default {
     },
     async themSach(data) {
       try {
-        await SachService.create(data);
+        await BookService.create(data);
         this.$toast?.success?.("Thêm sách thành công!") ||
           alert("Đã thêm sách.");
         this.fetchSachs();
@@ -117,7 +117,7 @@ export default {
     },
     async capNhatSach(data) {
       try {
-        await SachService.update(this.sach.old, data);
+        await BookService.update(this.sach.old, data);
         this.$toast?.success?.("Cập nhật sách thành công!") ||
           alert("Đã cập nhật.");
         this.fetchSachs();
@@ -134,7 +134,7 @@ export default {
     async deleteSach(id) {
       if (confirm("Xóa sách này?")) {
         try {
-          await SachService.delete(id);
+          await BookService.delete(id);
           this.fetchSachs();
           this.resetForm();
         } catch (error) {

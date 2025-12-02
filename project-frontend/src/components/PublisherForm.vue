@@ -73,9 +73,11 @@ export default {
   methods: {
     themMoi() {
       this.$emit("them", this.nxbLocal);
+      this.$refs.form.resetForm();
     },
     capNhat() {
       this.$emit("capnhat", this.nxbLocal);
+      this.$refs.form.resetForm();
     },
     cancel() {
       this.$refs.form.resetForm();

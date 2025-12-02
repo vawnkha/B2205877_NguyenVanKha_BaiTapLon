@@ -50,7 +50,7 @@
 
 <script>
 import DocGiaForm from "@/components/ReaderForm.vue";
-import DocGiaService from "@/services/reader.service";
+import ReaderService from "@/services/reader.service";
 import InputSearch from "@/components/InputSearch.vue";
 
 export default {
@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     async fetchDocGias() {
-      const data = await DocGiaService.getAll();
+      const data = await ReaderService.getAll();
       this.allDocGias = data;
       this.docgias = data;
     },
@@ -97,7 +97,7 @@ export default {
     },
     async themDocGia(data) {
       try {
-        await DocGiaService.create(data);
+        await ReaderService.create(data);
         this.$toast?.success?.("Thêm độc giả thành công!") ||
           alert("Đã thêm độc giả.");
         this.fetchDocGias();
@@ -114,7 +114,14 @@ export default {
     },
     async capNhatDocGia(data) {
       try {
-        await DocGiaService.update(this.docgia.old, data);
+        const payload = { ...data };
+
+        if (!payload.Password || payload.Password.trim() === "") {
+          delete payload.Password;
+        }
+
+        await ReaderService.update(this.docgia.old, payload);
+
         this.$toast?.success?.("Cập nhật độc giả thành công!") ||
           alert("Đã cập nhật.");
         this.fetchDocGias();
@@ -126,12 +133,17 @@ export default {
       }
     },
     editDocGia(dg) {
-      this.docgia = { ...dg, Password: "", old: dg.MaDocGia };
+      this.docgia = {
+        ...dg,
+        Password: "",
+        old: dg.MaDocGia,
+        oldPassword: dg.Password,
+      };
     },
     async deleteDocGia(id) {
       if (confirm("Xóa độc giả này?")) {
         try {
-          await DocGiaService.delete(id);
+          await ReaderService.delete(id);
           this.resetForm();
           this.fetchDocGias();
         } catch (error) {

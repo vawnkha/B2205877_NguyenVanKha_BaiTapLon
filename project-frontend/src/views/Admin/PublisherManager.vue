@@ -91,8 +91,16 @@ export default {
     },
     async capNhatNXB(data) {
       try {
-        await NhaXuatBanService.update(this.nxb.old, data);
+        const payload = { ...data };
+
+        if (!payload.Password || payload.Password.trim() === "") {
+          delete payload.Password;
+        }
+
+        await NhaXuatBanService.update(this.nxb.old, payload);
+
         this.$toast?.success?.("Cập nhật thành công!") || alert("Đã cập nhật.");
+
         this.fetchNXBs();
         this.nxb.old = data.MaNXB;
       } catch (err) {
@@ -101,13 +109,17 @@ export default {
       }
     },
     editNXB(nxb) {
-      this.nxb = { ...nxb, old: nxb.MaNXB };
+      this.nxb = {
+        ...nxb,
+        Password: "",
+        old: nxb.MaNXB,
+        oldPassword: nxb.Password,
+      };
     },
     async xoaNXB(id) {
       if (confirm("Bạn có chắc muốn xoá không?")) {
         await NhaXuatBanService.delete(id);
         this.fetchNXBs();
-        this.resetForm();
       }
     },
     resetForm() {

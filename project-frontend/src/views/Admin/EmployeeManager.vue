@@ -51,7 +51,7 @@
 
 <script>
 import NhanVienForm from "@/components/EmployeeForm.vue";
-import NhanVienService from "@/services/employee.service";
+import EmployeeService from "@/services/employee.service";
 import InputSearch from "@/components/InputSearch.vue";
 
 export default {
@@ -64,8 +64,8 @@ export default {
       nhanvien: {
         HoTenNV: "",
         MSNV: "",
-        Chucvu: "",
-        Diachi: "",
+        ChucVu: "",
+        DiaChi: "",
         SoDienThoai: "",
         Password: "",
         oldMSNV: "",
@@ -74,7 +74,7 @@ export default {
   },
   methods: {
     async fetchNhanViens() {
-      const data = await NhanVienService.getAll();
+      const data = await EmployeeService.getAll();
       this.allNhanViens = data;
       this.nhanviens = data;
     },
@@ -95,7 +95,7 @@ export default {
 
     async themNhanVien(data) {
       try {
-        await NhanVienService.create(data);
+        await EmployeeService.create(data);
         this.$toast?.success?.("Thêm nhân viên thành công!") ||
           alert("Đã thêm nhân viên.");
         this.fetchNhanViens();
@@ -113,7 +113,14 @@ export default {
 
     async capNhatNhanVien(data) {
       try {
-        await NhanVienService.update(this.nhanvien.oldMSNV, data);
+        const payload = { ...data };
+
+        if (!payload.Password || payload.Password.trim() === "") {
+          delete payload.Password;
+        }
+
+        await EmployeeService.update(this.nhanvien.oldMSNV, payload);
+
         this.$toast?.success?.("Cập nhật nhân viên thành công!") ||
           alert("Đã cập nhật.");
         this.fetchNhanViens();
@@ -126,15 +133,18 @@ export default {
     },
 
     editNhanVien(nv) {
-      this.nhanvien = { ...nv, Password: "", oldMSNV: nv.MSNV };
+      this.nhanvien = {
+        ...nv,
+        Password: "",
+        oldMSNV: nv.MSNV,
+      };
     },
 
     async deleteNhanVien(id) {
       if (confirm("Xóa nhân viên này?")) {
         try {
-          await NhanVienService.delete(id);
+          await EmployeeService.delete(id);
           this.fetchNhanViens();
-          this.resetForm();
         } catch (error) {
           this.$toast?.error?.("Lỗi khi xoá!") || alert("Xoá thất bại.");
         }

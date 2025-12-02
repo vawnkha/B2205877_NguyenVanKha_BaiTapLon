@@ -57,7 +57,6 @@
     </div>
 
     <div class="col-12">
-      <!-- Tách 2 nút riêng biệt -->
       <template v-if="nhanvienLocal._id">
         <button type="button" class="btn btn-warning" @click="capNhat">
           Cập nhật
@@ -119,9 +118,11 @@ export default {
   methods: {
     capNhat() {
       this.$emit("capnhat", this.nhanvienLocal);
+      this.$refs.form.resetForm();
     },
     themMoi() {
       this.$emit("them", this.nhanvienLocal);
+      this.$refs.form.resetForm();
     },
     cancel() {
       this.$refs.form.resetForm();

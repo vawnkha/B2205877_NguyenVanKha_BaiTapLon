@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import MuonSachService from "@/services/borrow_book.service";
+import BorrowBookService from "@/services/borrow_book.service";
 
 export default {
   data() {
@@ -66,7 +66,9 @@ export default {
       }
 
       try {
-        const data = await MuonSachService.findByMaDocGia(docGia.user.MaDocGia);
+        const data = await BorrowBookService.findByMaDocGia(
+          docGia.user.MaDocGia
+        );
         this.history = data;
       } catch (err) {
         console.error(err);
