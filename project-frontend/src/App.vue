@@ -1,11 +1,14 @@
-<script setup></script>
+<script>
+export default {};
+</script>
 
 <template>
-  <h1>You did it!</h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p>
+  <h1>Hello, Vue.js!</h1>
 </template>
 
-<style scoped></style>
+<style>
+.page {
+  max-width: 400px;
+  margin: auto;
+}
+</style>
