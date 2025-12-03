@@ -1,51 +1,92 @@
 <template>
-  <div>
-    <h4>Quản lý nhân viên</h4>
+  <div class="container-fluid">
+    <div class="d-flex align-items-center mb-3">
+      <h4 class="mb-0">
+        <i class="fa-solid fa-users-gear me-2"></i> Quản lý nhân viên
+      </h4>
+    </div>
 
-    <InputSearch v-model="searchText" @submit="timKiemNhanVien" />
+    <div class="mb-3">
+      <InputSearch v-model="searchText" @submit="timKiemNhanVien" />
+    </div>
 
-    <NhanVienForm
-      :nhanvien="nhanvien"
-      @them="themNhanVien"
-      @capnhat="capNhatNhanVien"
-      @cancel="resetForm"
-    />
+    <div class="card shadow-sm mb-4">
+      <div
+        class="card-header bg-primary text-white py-2 d-flex align-items-center justify-content-between"
+        style="cursor: pointer"
+        @click="toggleForm"
+      >
+        <strong>
+          <i class="fa-solid fa-user-plus me-1"></i>
+          {{ nhanvien.oldMSNV ? "Cập nhật nhân viên" : "Thêm nhân viên" }}
+        </strong>
 
-    <table class="table table-bordered table-striped mt-3">
-      <thead>
-        <tr>
-          <th>MSNV</th>
-          <th>Họ tên</th>
-          <th>Chức vụ</th>
-          <th>Địa chỉ</th>
-          <th>Điện thoại</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="nv in nhanviens" :key="nv.MSNV">
-          <td>{{ nv.MSNV }}</td>
-          <td>{{ nv.HoTenNV }}</td>
-          <td>{{ nv.Chucvu }}</td>
-          <td>{{ nv.Diachi }}</td>
-          <td>{{ nv.SoDienThoai }}</td>
-          <td>
-            <button
-              class="btn btn-sm btn-warning me-2"
-              @click="editNhanVien(nv)"
-            >
-              Sửa
-            </button>
-            <button
-              class="btn btn-sm btn-danger"
-              @click="deleteNhanVien(nv.MSNV)"
-            >
-              Xóa
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <i class="fa-solid" :class="isFormVisible ? 'fa-minus' : 'fa-plus'"></i>
+      </div>
+
+      <div class="card-body" v-show="isFormVisible">
+        <NhanVienForm
+          :nhanvien="nhanvien"
+          @them="themNhanVien"
+          @capnhat="capNhatNhanVien"
+          @cancel="closeForm"
+        />
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white py-2">
+        <strong
+          ><i class="fa-solid fa-list me-1"></i> Danh sách nhân viên</strong
+        >
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table table-bordered table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>MSNV</th>
+              <th>Họ tên</th>
+              <th>Chức vụ</th>
+              <th>Địa chỉ</th>
+              <th>Điện thoại</th>
+              <th style="width: 110px">Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="nv in nhanviens" :key="nv.MSNV">
+              <td>{{ nv.MSNV }}</td>
+              <td>{{ nv.HoTenNV }}</td>
+              <td>{{ nv.Chucvu }}</td>
+              <td>{{ nv.Diachi }}</td>
+              <td>{{ nv.SoDienThoai }}</td>
+              <td>
+                <button
+                  class="btn btn-sm btn-warning me-1"
+                  @click="editNhanVien(nv)"
+                >
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+
+                <button
+                  class="btn btn-sm btn-danger"
+                  @click="deleteNhanVien(nv.MSNV)"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+            <tr v-if="nhanviens.length === 0">
+              <td colspan="6" class="text-center py-3 text-muted">
+                Không có nhân viên nào.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -64,12 +105,13 @@ export default {
       nhanvien: {
         HoTenNV: "",
         MSNV: "",
-        ChucVu: "",
-        DiaChi: "",
+        Chucvu: "",
+        Diachi: "",
         SoDienThoai: "",
         Password: "",
         oldMSNV: "",
       },
+      isFormVisible: false,
     };
   },
   methods: {
@@ -138,6 +180,7 @@ export default {
         Password: "",
         oldMSNV: nv.MSNV,
       };
+      this.isFormVisible = true;
     },
 
     async deleteNhanVien(id) {
@@ -160,6 +203,19 @@ export default {
         SoDienThoai: "",
         Password: "",
       };
+    },
+    toggleForm() {
+      this.isFormVisible = !this.isFormVisible;
+    },
+
+    openEditForm(nv) {
+      this.editNhanVien(nv);
+      this.isFormVisible = true;
+    },
+
+    closeForm() {
+      this.resetForm();
+      this.isFormVisible = false;
     },
   },
   mounted() {
