@@ -1,3 +1,4 @@
+// File: src/views/Admin/TraSachManager.vue
 <template>
   <div>
     <h4>Quản lý trả sách</h4>
@@ -78,7 +79,7 @@ export default {
         alert("Phiếu mượn chưa có đầy đủ thông tin (Ngày mượn, Ngày trả).");
         return;
       }
-      const ngayTraThuc = new Date(data.NgayTraThuc);
+      const ngayTraThuc = new Date();
       const ngayTra = new Date(data.NgayTra);
 
       const msPerDay = 1000 * 60 * 60 * 24;
@@ -90,7 +91,7 @@ export default {
 
       const payload = {
         ...data,
-        NgayTraThuc: ngayTraThuc.toISOString().slice(0, 10),
+        NgayKetThuc: ngayTraThuc.toISOString().slice(0, 10),
         TienPhatTreHan: tienPhat,
         TrangThai: "Đã trả",
       };

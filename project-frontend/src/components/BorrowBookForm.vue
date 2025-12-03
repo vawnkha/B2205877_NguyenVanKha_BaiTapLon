@@ -74,7 +74,7 @@
     <!-- Ngày trả thực -->
     <div class="col-md-4">
       <label>Ngày trả thực</label>
-      <Field name="NgayTraThuc" v-model="local.NgayTraThuc" v-slot="{ field }">
+      <Field name="NgayTraThuc" v-model="local.NgayKetThuc" v-slot="{ field }">
         <input v-bind="field" type="date" class="form-control" disabled />
       </Field>
     </div>
@@ -162,9 +162,11 @@ export default {
   methods: {
     themMoi() {
       this.$emit("them", this.local);
+      this.$refs.form.resetForm();
     },
     capNhat() {
       this.$emit("capnhat", this.local);
+      this.$refs.form.resetForm();
     },
     cancel() {
       this.$refs.form.resetForm();

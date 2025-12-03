@@ -1,89 +1,67 @@
 <template>
-  <Form ref="form" :validation-schema="schema" class="row g-3 mb-4">
+  <Form :validation-schema="schema" class="row g-3 mb-4">
     <!-- Mã độc giả -->
     <div class="col-md-4">
       <label>Mã độc giả</label>
-      <Field name="MaDocGia" v-slot="{ field }">
-        <input
-          v-bind="field"
-          class="form-control"
-          :value="local.MaDocGia"
-          disabled
-        />
+      <Field name="MaDocGia" v-model="local.MaDocGia" v-slot="{ field }">
+        <input v-bind="field" class="form-control" disabled />
       </Field>
     </div>
 
     <!-- Mã sách -->
     <div class="col-md-4">
       <label>Mã sách</label>
-      <Field name="MaSach" v-slot="{ field }">
-        <input
-          v-bind="field"
-          class="form-control"
-          :value="local.MaSach"
-          disabled
-        />
+      <Field name="MaSach" v-model="local.MaSach" v-slot="{ field }">
+        <input v-bind="field" class="form-control" disabled />
       </Field>
     </div>
 
     <!-- Ngày mượn -->
     <div class="col-md-4">
       <label>Ngày mượn</label>
-      <Field name="NgayMuon" v-slot="{ field }">
-        <input
-          v-bind="field"
-          class="form-control"
-          :value="local.NgayMuon"
-          disabled
-        />
+      <Field name="NgayMuon" v-model="local.NgayMuon" v-slot="{ field }">
+        <input v-bind="field" class="form-control" disabled />
       </Field>
     </div>
 
     <!-- Ngày trả -->
     <div class="col-md-4">
       <label>Ngày trả</label>
-      <Field name="NgayTra" v-slot="{ field }">
-        <input
-          v-bind="field"
-          class="form-control"
-          :value="local.NgayTra"
-          disabled
-        />
+      <Field name="NgayTra" v-model="local.NgayTra" v-slot="{ field }">
+        <input v-bind="field" class="form-control" disabled />
       </Field>
     </div>
 
     <!-- Ngày trả thực -->
     <div class="col-md-4">
       <label>Ngày trả thực</label>
-      <Field name="NgayTraThuc" v-slot="{ field }">
-        <input
-          type="date"
-          class="form-control"
-          :value="local.NgayTraThuc"
-          @input="local.NgayTraThuc = $event.target.value"
-        />
+      <Field name="NgayTraThuc" v-model="local.NgayTraThuc" v-slot="{ field }">
+        <input v-bind="field" type="date" class="form-control" />
       </Field>
     </div>
 
     <!-- Tiền phạt trễ hạn -->
     <div class="col-md-4">
       <label>Tiền phạt trễ hạn</label>
-      <Field name="TienPhatTreHan" v-slot="{ field }">
-        <input
-          v-bind="field"
-          class="form-control"
-          :value="local.TienPhatTreHan"
-          disabled
-        />
+      <Field
+        name="TienPhatTreHan"
+        v-model="local.TienPhatTreHan"
+        v-slot="{ field }"
+      >
+        <input v-bind="field" class="form-control" disabled />
       </Field>
     </div>
 
-    <!-- Buttons -->
+    <!-- Nút thao tác -->
     <div class="col-12">
       <button class="btn btn-success" type="button" @click="xacNhanTra">
         Xác nhận trả
       </button>
-      <button class="btn btn-secondary ms-2" type="button" @click="cancel">
+      <button
+        class="btn btn-secondary ms-2"
+        type="button"
+        @click="$emit('cancel')"
+      >
         Hủy
       </button>
     </div>
@@ -96,17 +74,13 @@ import * as yup from "yup";
 
 export default {
   components: { Form, Field },
-
   props: {
     phieu: { type: Object, required: true },
   },
-
   emits: ["xacnhan", "cancel"],
-
   data() {
     return {
       local: {},
-
       schema: yup.object({
         MaDocGia: yup.string().required(),
         MaSach: yup.string().required(),
@@ -116,47 +90,28 @@ export default {
       }),
     };
   },
-
   watch: {
     phieu: {
       immediate: true,
       handler(newVal) {
-        if (!newVal) {
-          this.local = {};
-          return;
-        }
-
         const today = new Date().toISOString().split("T")[0];
-
         this.local = {
           ...newVal,
           NgayTraThuc: newVal.NgayTraThuc || today,
-          TienPhatTreHan: newVal.TienPhatTreHan || 0,
         };
       },
     },
   },
-
   methods: {
     xacNhanTra() {
-      const ngayTraThuc = new Date(this.local.NgayTraThuc);
+      const today = new Date(this.local.NgayTraThuc || new Date());
       const ngayTra = new Date(this.local.NgayTra);
-
-      const diffTime = ngayTraThuc.getTime() - ngayTra.getTime();
+      const diffTime = today.getTime() - ngayTra.getTime();
       const lateDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
       this.local.TienPhatTreHan = lateDays > 0 ? lateDays * 3000 : 0;
 
       this.$emit("xacnhan", this.local);
-      this.$refs.form.resetForm();
-    },
-
-    cancel() {
-      this.$refs.form.resetForm();
-      this.$emit("cancel");
     },
   },
 };
 </script>
-
-<style scoped></style>
