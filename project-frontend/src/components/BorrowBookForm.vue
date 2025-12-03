@@ -113,8 +113,8 @@
 <script>
 import { Form, Field, ErrorMessage } from "vee-validate";
 import * as yup from "yup";
-import DocGiaService from "@/services/reader.service";
-import SachService from "@/services/book.service";
+import ReaderService from "@/services/reader.service";
+import BookService from "@/services/book.service";
 
 export default {
   components: { Form, Field, ErrorMessage },
@@ -156,8 +156,8 @@ export default {
     },
   },
   async mounted() {
-    this.docGias = await DocGiaService.getAll();
-    this.sachs = await SachService.getAll();
+    this.docGias = await ReaderService.getAll();
+    this.sachs = await BookService.getAll();
   },
   methods: {
     themMoi() {
