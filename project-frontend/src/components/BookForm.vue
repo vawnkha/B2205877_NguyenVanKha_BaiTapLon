@@ -183,8 +183,8 @@ export default {
         DonGia: yup
           .number()
           .typeError("Đơn giá phải là số")
-          .positive()
-          .nullable(),
+          .positive("Đơn giá phải lớn hơn 0")
+          .required("Đơn giá là bắt buộc"),
         SoQuyen: yup
           .number()
           .typeError("Số quyển phải là số")

@@ -105,6 +105,7 @@
 <script>
 import { Form, Field } from "vee-validate";
 import * as yup from "yup";
+import BookService from "@/services/book.service";
 
 export default {
   components: { Form, Field },
@@ -128,23 +129,34 @@ export default {
     phieu: {
       immediate: true,
       handler(newVal) {
-        const today = new Date().toISOString().split("T")[0];
-        this.local = {
-          ...newVal,
-          NgayTraThuc: newVal.NgayTraThuc || today,
-        };
+        this.local = { ...newVal };
+        if (!this.local.NgayTraThuc) {
+          this.local.NgayTraThuc = new Date().toISOString().split("T")[0];
+        }
       },
     },
   },
-  methods: {
-    xacNhanTra() {
-      const today = new Date(this.local.NgayTraThuc || new Date());
-      const ngayTra = new Date(this.local.NgayTra);
-      const diffTime = today.getTime() - ngayTra.getTime();
-      const lateDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      this.local.TienPhatTreHan = lateDays > 0 ? lateDays * 3000 : 0;
 
-      this.$emit("xacnhan", this.local);
+  methods: {
+    async xacNhanTra() {
+      try {
+        const book = await BookService.get(this.local.MaSach);
+        const giaSach = book?.DonGia;
+
+        const today = new Date(this.local.NgayTraThuc || new Date());
+        const ngayTra = new Date(this.local.NgayTra);
+        const diffTime = today.getTime() - ngayTra.getTime();
+        const lateDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        this.local.TienPhatTreHan =
+          lateDays > 0 ? lateDays * giaSach * 0.05 : 0;
+
+        this.$emit("xacnhan", this.local);
+      } catch (error) {
+        console.error("Không thể lấy thông tin sách:", error);
+        this.local.TienPhatTreHan = 0;
+        this.$emit("xacnhan", this.local);
+      }
     },
   },
 };

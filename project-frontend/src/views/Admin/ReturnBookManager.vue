@@ -124,7 +124,9 @@ export default {
         alert("Phiếu mượn chưa có đầy đủ thông tin (Ngày mượn, Ngày trả).");
         return;
       }
-      const ngayTraThuc = new Date();
+      const book = await BookService.get(data.MaSach);
+      const donGia = book?.DonGia;
+      const ngayTraThuc = new Date(data.NgayTraThuc || new Date());
       const ngayTra = new Date(data.NgayTra);
 
       const msPerDay = 1000 * 60 * 60 * 24;
@@ -132,7 +134,7 @@ export default {
         0,
         Math.floor((ngayTraThuc - ngayTra) / msPerDay)
       );
-      const tienPhat = daysLate * 3000;
+      const tienPhat = daysLate * donGia * 0.05;
 
       const payload = {
         ...data,
@@ -146,7 +148,7 @@ export default {
         await BookService.addQuantity(data.MaSach, { quantity: 1 });
         alert("Xác nhận trả sách thành công.");
         this.fetchPhieus();
-        this.resetForm();
+        // this.resetForm();
       } catch (err) {
         alert("Lỗi khi xác nhận trả sách.");
       }
