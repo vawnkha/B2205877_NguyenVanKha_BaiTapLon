@@ -1,109 +1,159 @@
 <template>
-  <Form ref="form" :validation-schema="schema" class="row g-3 mb-4">
-    <!-- Mã độc giả -->
+  <Form ref="form" :validation-schema="schema" class="row g-4">
     <div class="col-md-4">
-      <label>Mã độc giả</label>
-      <Field name="MaDocGia" v-model="local.MaDocGia" v-slot="{ field }">
-        <select v-bind="field" class="form-select">
-          <option value="">-- Chọn độc giả --</option>
-          <option
-            v-for="docGia in docGias"
-            :key="docGia.MaDocGia"
-            :value="docGia.MaDocGia"
+      <label class="form-label fw-semibold">Độc giả</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-user"></i>
+        </span>
+        <Field name="MaDocGia" v-model="local.MaDocGia" v-slot="{ field }">
+          <select v-bind="field" class="form-select">
+            <option value="">-- Chọn độc giả --</option>
+            <option
+              v-for="docGia in docGias"
+              :key="docGia.MaDocGia"
+              :value="docGia.MaDocGia"
+            >
+              {{ docGia.MaDocGia }} - {{ docGia.HoLot }} {{ docGia.Ten }}
+            </option>
+          </select>
+        </Field>
+      </div>
+      <ErrorMessage name="MaDocGia" class="text-danger small" />
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Sách</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-book"></i>
+        </span>
+        <Field name="MaSach" v-model="local.MaSach" v-slot="{ field }">
+          <select v-bind="field" class="form-select">
+            <option value="">-- Chọn sách --</option>
+            <option
+              v-for="sach in sachs"
+              :key="sach.MaSach"
+              :value="sach.MaSach"
+            >
+              {{ sach.MaSach }} - {{ sach.TenSach }}
+            </option>
+          </select>
+        </Field>
+      </div>
+      <ErrorMessage name="MaSach" class="text-danger small" />
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Ngày mượn</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-calendar-days"></i>
+        </span>
+        <Field name="NgayMuon" v-model="local.NgayMuon" v-slot="{ field }">
+          <input v-bind="field" type="date" class="form-control" />
+        </Field>
+      </div>
+      <ErrorMessage name="NgayMuon" class="text-danger small" />
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Ngày trả</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-calendar-days"></i>
+        </span>
+        <Field name="NgayTra" v-model="local.NgayTra" v-slot="{ field }">
+          <input v-bind="field" type="date" class="form-control" />
+        </Field>
+      </div>
+      <ErrorMessage name="NgayTra" class="text-danger small" />
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Trạng thái</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-info-circle"></i>
+        </span>
+        <Field name="TrangThai" v-model="local.TrangThai" v-slot="{ field }">
+          <select
+            v-bind="field"
+            class="form-select"
+            :disabled="isTrangThaiDisabled"
           >
-            {{ docGia.MaDocGia }} - {{ docGia.HoLot }} {{ docGia.Ten }}
-          </option>
-        </select>
-      </Field>
-      <ErrorMessage name="MaDocGia" class="text-danger" />
+            <option
+              v-for="trangThai in trangThaiOptions"
+              :key="trangThai"
+              :value="trangThai"
+            >
+              {{ trangThai }}
+            </option>
+          </select>
+        </Field>
+      </div>
+      <ErrorMessage name="TrangThai" class="text-danger small" />
     </div>
 
-    <!-- Mã sách -->
     <div class="col-md-4">
-      <label>Mã sách</label>
-      <Field name="MaSach" v-model="local.MaSach" v-slot="{ field }">
-        <select v-bind="field" class="form-select">
-          <option value="">-- Chọn sách --</option>
-          <option v-for="sach in sachs" :key="sach.MaSach" :value="sach.MaSach">
-            {{ sach.MaSach }} - {{ sach.TenSach }}
-          </option>
-        </select>
-      </Field>
-      <ErrorMessage name="MaSach" class="text-danger" />
-    </div>
-
-    <!-- Ngày mượn -->
-    <div class="col-md-4">
-      <label>Ngày mượn</label>
-      <Field name="NgayMuon" v-model="local.NgayMuon" v-slot="{ field }">
-        <input v-bind="field" type="date" class="form-control" />
-      </Field>
-      <ErrorMessage name="NgayMuon" class="text-danger" />
-    </div>
-
-    <!-- Ngày trả -->
-    <div class="col-md-4">
-      <label>Ngày trả</label>
-      <Field name="NgayTra" v-model="local.NgayTra" v-slot="{ field }">
-        <input v-bind="field" type="date" class="form-control" />
-      </Field>
-      <ErrorMessage name="NgayTra" class="text-danger" />
-    </div>
-
-    <!-- Trạng thái -->
-    <div class="col-md-4">
-      <label>Trạng thái</label>
-      <Field name="TrangThai" v-model="local.TrangThai" v-slot="{ field }">
-        <select
-          v-bind="field"
-          class="form-select"
-          :disabled="isTrangThaiDisabled"
+      <label class="form-label fw-semibold">Ngày trả thực</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-calendar-check"></i>
+        </span>
+        <Field
+          name="NgayTraThuc"
+          v-model="local.NgayKetThuc"
+          v-slot="{ field }"
         >
-          <option
-            v-for="trangThai in trangThaiOptions"
-            :key="trangThai"
-            :value="trangThai"
-          >
-            {{ trangThai }}
-          </option>
-        </select>
-      </Field>
-      <ErrorMessage name="TrangThai" class="text-danger" />
+          <input v-bind="field" type="date" class="form-control" disabled />
+        </Field>
+      </div>
     </div>
 
-    <!-- Ngày trả thực -->
     <div class="col-md-4">
-      <label>Ngày trả thực</label>
-      <Field name="NgayTraThuc" v-model="local.NgayKetThuc" v-slot="{ field }">
-        <input v-bind="field" type="date" class="form-control" disabled />
-      </Field>
+      <label class="form-label fw-semibold">Tiền phạt</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-money-bill-wave"></i>
+        </span>
+        <Field
+          name="TienPhatTreHan"
+          v-model="local.TienPhatTreHan"
+          v-slot="{ field }"
+        >
+          <input v-bind="field" type="number" class="form-control" disabled />
+        </Field>
+      </div>
     </div>
 
-    <!-- Tiền phạt trễ hạn -->
-    <div class="col-md-4">
-      <label>Tiền phạt trễ hạn</label>
-      <Field
-        name="TienPhatTreHan"
-        v-model="local.TienPhatTreHan"
-        v-slot="{ field }"
+    <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+      <button
+        v-if="local._id"
+        type="button"
+        class="btn btn-warning d-flex align-items-center px-4"
+        @click="capNhat"
       >
-        <input v-bind="field" type="number" class="form-control" disabled />
-      </Field>
-    </div>
+        <i class="fa-solid fa-pen-to-square me-2"></i>
+        Cập nhật
+      </button>
 
-    <!-- Nút thao tác -->
-    <div class="col-12">
-      <template v-if="local._id">
-        <button type="button" class="btn btn-warning" @click="capNhat">
-          Cập nhật
-        </button>
-      </template>
-      <template v-else>
-        <button type="button" class="btn btn-success" @click="themMoi">
-          Thêm mới
-        </button>
-      </template>
-      <button type="button" class="btn btn-secondary ms-2" @click="cancel">
+      <button
+        v-else
+        type="button"
+        class="btn btn-success d-flex align-items-center px-4"
+        @click="themMoi"
+      >
+        <i class="fa-solid fa-plus me-2"></i>
+        Thêm mới
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary d-flex align-items-center px-4"
+        @click="cancel"
+      >
+        <i class="fa-solid fa-xmark me-2"></i>
         Hủy
       </button>
     </div>

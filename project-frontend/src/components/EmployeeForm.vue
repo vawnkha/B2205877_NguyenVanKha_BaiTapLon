@@ -1,7 +1,6 @@
 <template>
   <Form ref="form" :validation-schema="schema">
     <div class="row g-4">
-      <!-- MSNV -->
       <div class="col-md-4">
         <label class="form-label fw-semibold">Mã nhân viên</label>
         <div class="input-group">
@@ -20,7 +19,6 @@
         <ErrorMessage name="MSNV" class="text-danger small" />
       </div>
 
-      <!-- Họ tên -->
       <div class="col-md-4">
         <label class="form-label fw-semibold">Họ tên</label>
         <div class="input-group">
@@ -43,7 +41,6 @@
         <ErrorMessage name="HoTenNV" class="text-danger small" />
       </div>
 
-      <!-- Chức vụ -->
       <div class="col-md-4">
         <label class="form-label fw-semibold">Chức vụ</label>
         <div class="input-group">
@@ -66,7 +63,6 @@
         <ErrorMessage name="Chucvu" class="text-danger small" />
       </div>
 
-      <!-- Địa chỉ -->
       <div class="col-md-4">
         <label class="form-label fw-semibold">Địa chỉ</label>
         <div class="input-group">
@@ -89,7 +85,6 @@
         <ErrorMessage name="Diachi" class="text-danger small" />
       </div>
 
-      <!-- Số điện thoại -->
       <div class="col-md-4">
         <label class="form-label fw-semibold">Số điện thoại</label>
         <div class="input-group">
@@ -112,7 +107,6 @@
         <ErrorMessage name="SoDienThoai" class="text-danger small" />
       </div>
 
-      <!-- Mật khẩu -->
       <div class="col-md-4">
         <label class="form-label fw-semibold">Mật khẩu</label>
         <div class="input-group">
@@ -135,7 +129,6 @@
         <ErrorMessage name="Password" class="text-danger small" />
       </div>
 
-      <!-- Buttons -->
       <div class="col-12 mt-4 d-flex justify-content-end gap-2">
         <button
           v-if="nhanvienLocal._id"

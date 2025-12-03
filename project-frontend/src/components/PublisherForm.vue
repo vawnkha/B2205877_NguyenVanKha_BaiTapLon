@@ -1,41 +1,86 @@
 <template>
-  <Form ref="form" :validation-schema="schema" class="row g-3 mb-4">
+  <Form ref="form" :validation-schema="schema" class="row g-4">
     <div class="col-md-4">
-      <label>Mã NXB</label>
-      <Field name="MaNXB" v-model="nxbLocal.MaNXB" v-slot="{ field }">
-        <input v-bind="field" type="text" class="form-control" />
-      </Field>
-      <ErrorMessage name="MaNXB" class="text-danger" />
+      <label class="form-label fw-semibold">Mã NXB</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-hashtag"></i>
+        </span>
+        <Field name="MaNXB" v-model="nxbLocal.MaNXB" v-slot="{ field }">
+          <input
+            v-bind="field"
+            type="text"
+            class="form-control"
+            placeholder="VD: NXB001"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="MaNXB" class="text-danger small" />
     </div>
 
     <div class="col-md-4">
-      <label>Tên NXB</label>
-      <Field name="TenNXB" v-model="nxbLocal.TenNXB" v-slot="{ field }">
-        <input v-bind="field" type="text" class="form-control" />
-      </Field>
-      <ErrorMessage name="TenNXB" class="text-danger" />
+      <label class="form-label fw-semibold">Tên NXB</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-building"></i>
+        </span>
+        <Field name="TenNXB" v-model="nxbLocal.TenNXB" v-slot="{ field }">
+          <input
+            v-bind="field"
+            type="text"
+            class="form-control"
+            placeholder="Nhập tên nhà xuất bản"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="TenNXB" class="text-danger small" />
     </div>
 
     <div class="col-md-4">
-      <label>Địa chỉ</label>
-      <Field name="DiaChi" v-model="nxbLocal.DiaChi" v-slot="{ field }">
-        <input v-bind="field" type="text" class="form-control" />
-      </Field>
-      <ErrorMessage name="DiaChi" class="text-danger" />
+      <label class="form-label fw-semibold">Địa chỉ</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-location-dot"></i>
+        </span>
+        <Field name="DiaChi" v-model="nxbLocal.DiaChi" v-slot="{ field }">
+          <input
+            v-bind="field"
+            type="text"
+            class="form-control"
+            placeholder="Nhập địa chỉ"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="DiaChi" class="text-danger small" />
     </div>
 
-    <div class="col-12">
-      <template v-if="nxbLocal._id">
-        <button type="button" class="btn btn-warning" @click="capNhat">
-          Cập nhật
-        </button>
-      </template>
-      <template v-else>
-        <button type="button" class="btn btn-success" @click="themMoi">
-          Thêm mới
-        </button>
-      </template>
-      <button type="button" class="btn btn-secondary ms-2" @click="cancel">
+    <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+      <button
+        v-if="nxbLocal._id"
+        type="button"
+        class="btn btn-warning d-flex align-items-center px-4"
+        @click="capNhat"
+      >
+        <i class="fa-solid fa-pen-to-square me-2"></i>
+        Cập nhật
+      </button>
+
+      <button
+        v-else
+        type="button"
+        class="btn btn-success d-flex align-items-center px-4"
+        @click="themMoi"
+      >
+        <i class="fa-solid fa-plus me-2"></i>
+        Thêm mới
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary d-flex align-items-center px-4"
+        @click="cancel"
+      >
+        <i class="fa-solid fa-xmark me-2"></i>
         Hủy
       </button>
     </div>

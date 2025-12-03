@@ -1,67 +1,101 @@
 <template>
-  <Form :validation-schema="schema" class="row g-3 mb-4">
-    <!-- Mã độc giả -->
+  <Form :validation-schema="schema" class="row g-4">
     <div class="col-md-4">
-      <label>Mã độc giả</label>
-      <Field name="MaDocGia" v-model="local.MaDocGia" v-slot="{ field }">
-        <input v-bind="field" class="form-control" disabled />
-      </Field>
+      <label class="form-label fw-semibold">Độc giả</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-user"></i>
+        </span>
+        <Field name="MaDocGia" v-model="local.MaDocGia" v-slot="{ field }">
+          <input v-bind="field" class="form-control" disabled />
+        </Field>
+      </div>
     </div>
 
-    <!-- Mã sách -->
     <div class="col-md-4">
-      <label>Mã sách</label>
-      <Field name="MaSach" v-model="local.MaSach" v-slot="{ field }">
-        <input v-bind="field" class="form-control" disabled />
-      </Field>
+      <label class="form-label fw-semibold">Sách</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-book"></i>
+        </span>
+        <Field name="MaSach" v-model="local.MaSach" v-slot="{ field }">
+          <input v-bind="field" class="form-control" disabled />
+        </Field>
+      </div>
     </div>
 
-    <!-- Ngày mượn -->
     <div class="col-md-4">
-      <label>Ngày mượn</label>
-      <Field name="NgayMuon" v-model="local.NgayMuon" v-slot="{ field }">
-        <input v-bind="field" class="form-control" disabled />
-      </Field>
+      <label class="form-label fw-semibold">Ngày mượn</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-calendar-days"></i>
+        </span>
+        <Field name="NgayMuon" v-model="local.NgayMuon" v-slot="{ field }">
+          <input v-bind="field" type="date" class="form-control" disabled />
+        </Field>
+      </div>
     </div>
 
-    <!-- Ngày trả -->
     <div class="col-md-4">
-      <label>Ngày trả</label>
-      <Field name="NgayTra" v-model="local.NgayTra" v-slot="{ field }">
-        <input v-bind="field" class="form-control" disabled />
-      </Field>
+      <label class="form-label fw-semibold">Ngày trả</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-calendar-days"></i>
+        </span>
+        <Field name="NgayTra" v-model="local.NgayTra" v-slot="{ field }">
+          <input v-bind="field" type="date" class="form-control" disabled />
+        </Field>
+      </div>
     </div>
 
-    <!-- Ngày trả thực -->
     <div class="col-md-4">
-      <label>Ngày trả thực</label>
-      <Field name="NgayTraThuc" v-model="local.NgayTraThuc" v-slot="{ field }">
-        <input v-bind="field" type="date" class="form-control" />
-      </Field>
+      <label class="form-label fw-semibold">Ngày trả thực</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-calendar-check"></i>
+        </span>
+        <Field
+          name="NgayTraThuc"
+          v-model="local.NgayTraThuc"
+          v-slot="{ field }"
+        >
+          <input v-bind="field" type="date" class="form-control" />
+        </Field>
+      </div>
     </div>
 
-    <!-- Tiền phạt trễ hạn -->
     <div class="col-md-4">
-      <label>Tiền phạt trễ hạn</label>
-      <Field
-        name="TienPhatTreHan"
-        v-model="local.TienPhatTreHan"
-        v-slot="{ field }"
+      <label class="form-label fw-semibold">Tiền phạt</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-money-bill-wave"></i>
+        </span>
+        <Field
+          name="TienPhatTreHan"
+          v-model="local.TienPhatTreHan"
+          v-slot="{ field }"
+        >
+          <input v-bind="field" class="form-control" disabled />
+        </Field>
+      </div>
+    </div>
+
+    <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+      <button
+        class="btn btn-success d-flex align-items-center px-4"
+        type="button"
+        @click="xacNhanTra"
       >
-        <input v-bind="field" class="form-control" disabled />
-      </Field>
-    </div>
-
-    <!-- Nút thao tác -->
-    <div class="col-12">
-      <button class="btn btn-success" type="button" @click="xacNhanTra">
+        <i class="fa-solid fa-check me-2"></i>
         Xác nhận trả
       </button>
+
       <button
-        class="btn btn-secondary ms-2"
+        class="btn btn-secondary d-flex align-items-center px-4"
         type="button"
         @click="$emit('cancel')"
       >
+        <i class="fa-solid fa-xmark me-2"></i>
         Hủy
       </button>
     </div>

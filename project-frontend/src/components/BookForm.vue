@@ -1,82 +1,162 @@
 <template>
-  <Form ref="form" :validation-schema="schema" class="row g-3 mb-4">
-    <div class="col-md-4">
-      <label>Mã sách</label>
-      <Field name="MaSach" v-model="sachLocal.MaSach" v-slot="{ field }">
-        <input v-bind="field" type="text" class="form-control" />
-      </Field>
-      <ErrorMessage name="MaSach" class="text-danger" />
+  <Form ref="form" :validation-schema="schema" class="row g-4">
+    <div class="col-md-3">
+      <label class="form-label fw-semibold">Mã sách</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-barcode"></i>
+        </span>
+        <Field name="MaSach" v-model="sachLocal.MaSach" v-slot="{ field }">
+          <input
+            v-bind="field"
+            type="text"
+            class="form-control"
+            placeholder="VD: S001"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="MaSach" class="text-danger small" />
     </div>
 
-    <div class="col-md-4">
-      <label>Tên sách</label>
-      <Field name="TenSach" v-model="sachLocal.TenSach" v-slot="{ field }">
-        <input v-bind="field" type="text" class="form-control" />
-      </Field>
-      <ErrorMessage name="TenSach" class="text-danger" />
+    <div class="col-md-3">
+      <label class="form-label fw-semibold">Tên sách</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-book"></i>
+        </span>
+        <Field name="TenSach" v-model="sachLocal.TenSach" v-slot="{ field }">
+          <input
+            v-bind="field"
+            type="text"
+            class="form-control"
+            placeholder="Nhập tên sách"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="TenSach" class="text-danger small" />
     </div>
 
-    <div class="col-md-2">
-      <label>Đơn giá</label>
-      <Field name="DonGia" v-model="sachLocal.DonGia" v-slot="{ field }">
-        <input v-bind="field" type="number" class="form-control" />
-      </Field>
-      <ErrorMessage name="DonGia" class="text-danger" />
+    <div class="col-md-3">
+      <label class="form-label fw-semibold">Đơn giá</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-money-bill-wave"></i>
+        </span>
+        <Field name="DonGia" v-model="sachLocal.DonGia" v-slot="{ field }">
+          <input
+            v-bind="field"
+            type="number"
+            class="form-control"
+            placeholder="VD: 50000"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="DonGia" class="text-danger small" />
     </div>
 
-    <div class="col-md-2">
-      <label>Số quyển</label>
-      <Field name="SoQuyen" v-model="sachLocal.SoQuyen" v-slot="{ field }">
-        <input v-bind="field" type="number" class="form-control" />
-      </Field>
-      <ErrorMessage name="SoQuyen" class="text-danger" />
+    <div class="col-md-3">
+      <label class="form-label fw-semibold">Số quyển</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-layer-group"></i>
+        </span>
+        <Field name="SoQuyen" v-model="sachLocal.SoQuyen" v-slot="{ field }">
+          <input
+            v-bind="field"
+            type="number"
+            class="form-control"
+            placeholder="VD: 10"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="SoQuyen" class="text-danger small" />
     </div>
 
-    <div class="col-md-2">
-      <label>Năm xuất bản</label>
-      <Field
-        name="NamXuatBan"
-        v-model="sachLocal.NamXuatBan"
-        v-slot="{ field }"
+    <div class="col-md-3">
+      <label class="form-label fw-semibold">Năm xuất bản</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-calendar-days"></i>
+        </span>
+        <Field
+          name="NamXuatBan"
+          v-model="sachLocal.NamXuatBan"
+          v-slot="{ field }"
+        >
+          <input
+            v-bind="field"
+            type="number"
+            class="form-control"
+            placeholder="VD: 2023"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="NamXuatBan" class="text-danger small" />
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label fw-semibold">Nhà xuất bản</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-building"></i>
+        </span>
+        <Field name="MaNXB" v-model="sachLocal.MaNXB" v-slot="{ field }">
+          <select v-bind="field" class="form-select">
+            <option disabled value="">-- Chọn nhà xuất bản --</option>
+            <option v-for="nxb in dsNXB" :key="nxb.MaNXB" :value="nxb.MaNXB">
+              {{ nxb.TenNXB }} ({{ nxb.MaNXB }})
+            </option>
+          </select>
+        </Field>
+      </div>
+      <ErrorMessage name="MaNXB" class="text-danger small" />
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label fw-semibold">Nguồn gốc / Tác giả</label>
+      <div class="input-group">
+        <span class="input-group-text bg-light">
+          <i class="fa-solid fa-pen-nib"></i>
+        </span>
+        <Field name="NguonGoc" v-model="sachLocal.NguonGoc" v-slot="{ field }">
+          <input
+            v-bind="field"
+            type="text"
+            class="form-control"
+            placeholder="Nhập tên tác giả hoặc nguồn gốc"
+          />
+        </Field>
+      </div>
+      <ErrorMessage name="NguonGoc" class="text-danger small" />
+    </div>
+
+    <div class="col-12 mt-4 d-flex justify-content-end gap-2">
+      <button
+        v-if="sachLocal._id"
+        type="button"
+        class="btn btn-warning d-flex align-items-center px-4"
+        @click="capNhat"
       >
-        <input v-bind="field" type="number" class="form-control" />
-      </Field>
-      <ErrorMessage name="NamXuatBan" class="text-danger" />
-    </div>
+        <i class="fa-solid fa-pen-to-square me-2"></i>
+        Cập nhật
+      </button>
 
-    <div class="col-md-4">
-      <label>Nhà xuất bản</label>
-      <Field name="MaNXB" v-model="sachLocal.MaNXB" v-slot="{ field }">
-        <select v-bind="field" class="form-select">
-          <option disabled value="">-- Chọn nhà xuất bản --</option>
-          <option v-for="nxb in dsNXB" :key="nxb.MaNXB" :value="nxb.MaNXB">
-            {{ nxb.TenNXB }} ({{ nxb.MaNXB }})
-          </option>
-        </select>
-      </Field>
-      <ErrorMessage name="MaNXB" class="text-danger" />
-    </div>
+      <button
+        v-else
+        type="button"
+        class="btn btn-success d-flex align-items-center px-4"
+        @click="themMoi"
+      >
+        <i class="fa-solid fa-plus me-2"></i>
+        Thêm mới
+      </button>
 
-    <div class="col-md-4">
-      <label>Nguồn gốc / Tác giả</label>
-      <Field name="NguonGoc" v-model="sachLocal.NguonGoc" v-slot="{ field }">
-        <input v-bind="field" type="text" class="form-control" />
-      </Field>
-      <ErrorMessage name="NguonGoc" class="text-danger" />
-    </div>
-
-    <div class="col-12">
-      <template v-if="sachLocal._id">
-        <button type="button" class="btn btn-warning" @click="capNhat">
-          Cập nhật
-        </button>
-      </template>
-      <template v-else>
-        <button type="button" class="btn btn-success" @click="themMoi">
-          Thêm mới
-        </button>
-      </template>
-      <button type="button" class="btn btn-secondary ms-2" @click="cancel">
+      <button
+        type="button"
+        class="btn btn-secondary d-flex align-items-center px-4"
+        @click="cancel"
+      >
+        <i class="fa-solid fa-xmark me-2"></i>
         Hủy
       </button>
     </div>

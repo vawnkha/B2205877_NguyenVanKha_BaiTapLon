@@ -84,7 +84,7 @@ export default {
   top: 0;
   height: 100vh;
   width: 16.666%;
-  background: linear-gradient(180deg, #776e6f, #332f2f);
+  background: linear-gradient(180deg, #0747c6, #312949);
   box-shadow: 3px 0 10px rgba(0, 0, 0, 0.2);
 }
 
