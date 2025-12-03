@@ -91,16 +91,8 @@ export default {
     },
     async capNhatNXB(data) {
       try {
-        const payload = { ...data };
-
-        if (!payload.Password || payload.Password.trim() === "") {
-          delete payload.Password;
-        }
-
-        await NhaXuatBanService.update(this.nxb.old, payload);
-
+        await NhaXuatBanService.update(this.nxb.old, data);
         this.$toast?.success?.("Cập nhật thành công!") || alert("Đã cập nhật.");
-
         this.fetchNXBs();
         this.nxb.old = data.MaNXB;
       } catch (err) {
@@ -109,12 +101,7 @@ export default {
       }
     },
     editNXB(nxb) {
-      this.nxb = {
-        ...nxb,
-        Password: "",
-        old: nxb.MaNXB,
-        oldPassword: nxb.Password,
-      };
+      this.nxb = { ...nxb, old: nxb.MaNXB };
     },
     async xoaNXB(id) {
       if (confirm("Bạn có chắc muốn xoá không?")) {
