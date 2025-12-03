@@ -46,7 +46,7 @@ class BorrowBooksService {
 
   async update(id, payload) {
     const filter = {
-      _id: ObjectId.isValid(id) ? new ObjectId(id) : null,
+      _id: new ObjectId(id),
     };
     const data = this.extractData(payload);
     const result = await this.collection.updateOne(filter, { $set: data });

@@ -41,6 +41,7 @@
               type="button"
               class="btn-close"
               data-bs-dismiss="modal"
+              @click="close"
             ></button>
           </div>
 
@@ -57,7 +58,11 @@
           </div>
 
           <div class="modal-footer">
-            <button class="btn btn-secondary" data-bs-dismiss="modal">
+            <button
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+              @click="close"
+            >
               Hủy
             </button>
             <button class="btn btn-primary" @click="xacNhanMuonSach">
@@ -189,6 +194,9 @@ export default {
         console.error(err);
         alert("Lỗi khi đăng ký mượn sách.");
       }
+    },
+    close() {
+      if (this.modalMuonSach) this.modalMuonSach.hide();
     },
   },
 };
