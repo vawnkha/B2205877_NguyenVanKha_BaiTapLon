@@ -1,38 +1,81 @@
-// File: src/views/Admin/TraSachManager.vue
 <template>
-  <div>
-    <h4>Quản lý trả sách</h4>
+  <div class="container-fluid">
+    <div class="d-flex align-items-center mb-3">
+      <h4 class="mb-0">
+        <i class="fa-solid fa-rotate-left me-2"></i> Quản lý trả sách
+      </h4>
+    </div>
 
-    <InputSearch v-model="searchText" @submit="timKiem" />
+    <div class="mb-3">
+      <InputSearch v-model="searchText" @submit="timKiem" />
+    </div>
 
-    <TraSachForm :phieu="phieu" @xacnhan="xacNhanTraSach" @cancel="resetForm" />
+    <div class="card shadow-sm mb-4">
+      <div
+        class="card-header bg-primary text-white py-2 d-flex align-items-center justify-content-between"
+        style="cursor: pointer"
+        @click="toggleForm"
+      >
+        <strong>
+          <i class="fa-solid fa-pencil me-1"></i>
+          {{ phieu.old ? "Xác nhận trả sách" : "Xác nhận trả sách" }}
+        </strong>
 
-    <table class="table table-bordered mt-3">
-      <thead>
-        <tr>
-          <th>Mã độc giả</th>
-          <th>Mã sách</th>
-          <th>Ngày mượn</th>
-          <th>Ngày trả</th>
-          <th>Trạng thái</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="p in phieus" :key="p._id">
-          <td>{{ p.MaDocGia }}</td>
-          <td>{{ p.MaSach }}</td>
-          <td>{{ p.NgayMuon }}</td>
-          <td>{{ p.NgayTra }}</td>
-          <td>{{ p.TrangThai }}</td>
-          <td>
-            <button class="btn btn-sm btn-info" @click="editPhieu(p)">
-              Xem
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <i class="fa-solid" :class="isFormVisible ? 'fa-minus' : 'fa-plus'"></i>
+      </div>
+
+      <div class="card-body" v-show="isFormVisible">
+        <TraSachForm
+          :phieu="phieu"
+          @xacnhan="xacNhanTraSach"
+          @cancel="closeForm"
+        />
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white py-2">
+        <strong>
+          <i class="fa-solid fa-list me-1"></i> Danh sách phiếu trả
+        </strong>
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table table-bordered table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Mã độc giả</th>
+              <th>Mã sách</th>
+              <th>Ngày mượn</th>
+              <th>Ngày trả</th>
+              <th>Trạng thái</th>
+              <th style="width: 110px">Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="p in phieus" :key="p._id">
+              <td>{{ p.MaDocGia }}</td>
+              <td>{{ p.MaSach }}</td>
+              <td>{{ p.NgayMuon }}</td>
+              <td>{{ p.NgayTra }}</td>
+              <td>{{ p.TrangThai }}</td>
+              <td>
+                <button class="btn btn-sm btn-info" @click="editPhieu(p)">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+              </td>
+            </tr>
+
+            <tr v-if="phieus.length === 0">
+              <td colspan="6" class="text-center py-3 text-muted">
+                Không có phiếu trả nào.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -50,6 +93,7 @@ export default {
       allPhieus: [],
       phieus: [],
       phieu: {},
+      isFormVisible: false,
     };
   },
   methods: {
@@ -70,6 +114,7 @@ export default {
     },
     editPhieu(p) {
       this.phieu = { ...p };
+      this.isFormVisible = true;
     },
     resetForm() {
       this.phieu = {};
@@ -105,6 +150,13 @@ export default {
       } catch (err) {
         alert("Lỗi khi xác nhận trả sách.");
       }
+    },
+    toggleForm() {
+      this.isFormVisible = !this.isFormVisible;
+    },
+    closeForm() {
+      this.resetForm();
+      this.isFormVisible = false;
     },
   },
   mounted() {

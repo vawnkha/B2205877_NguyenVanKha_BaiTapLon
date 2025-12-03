@@ -1,50 +1,95 @@
 <template>
-  <div>
-    <h4>Quản lý độc giả</h4>
+  <div class="container-fluid">
+    <div class="d-flex align-items-center mb-3">
+      <h4 class="mb-0">
+        <i class="fa-solid fa-users-viewfinder me-2"></i> Quản lý độc giả
+      </h4>
+    </div>
 
-    <InputSearch v-model="searchText" @submit="timKiemDocGia" />
+    <div class="mb-3">
+      <InputSearch v-model="searchText" @submit="timKiemDocGia" />
+    </div>
 
-    <DocGiaForm
-      :docgia="docgia"
-      @them="themDocGia"
-      @capnhat="capNhatDocGia"
-      @cancel="resetForm"
-    />
+    <div class="card shadow-sm mb-4">
+      <div
+        class="card-header bg-primary text-white py-2 d-flex align-items-center justify-content-between"
+        style="cursor: pointer"
+        @click="toggleForm"
+      >
+        <strong>
+          <i class="fa-solid fa-user-pen me-1"></i>
+          {{ docgia.old ? "Cập nhật độc giả" : "Thêm độc giả" }}
+        </strong>
 
-    <table class="table table-bordered table-striped mt-3">
-      <thead>
-        <tr>
-          <th>Mã đọc giả</th>
-          <th>Họ tên</th>
-          <th>Ngày sinh</th>
-          <th>Phái</th>
-          <th>Địa chỉ</th>
-          <th>Điện thoại</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="dg in docgias" :key="dg.MaDocGia">
-          <td>{{ dg.MaDocGia }}</td>
-          <td>{{ dg.HoLot }} {{ dg.Ten }}</td>
-          <td>{{ dg.NgaySinh }}</td>
-          <td>{{ dg.Phai }}</td>
-          <td>{{ dg.DiaChi }}</td>
-          <td>{{ dg.DienThoai }}</td>
-          <td>
-            <button class="btn btn-sm btn-warning me-2" @click="editDocGia(dg)">
-              Sửa
-            </button>
-            <button
-              class="btn btn-sm btn-danger"
-              @click="deleteDocGia(dg.MaDocGia)"
-            >
-              Xóa
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <i class="fa-solid" :class="isFormVisible ? 'fa-minus' : 'fa-plus'"></i>
+      </div>
+
+      <div class="card-body" v-show="isFormVisible">
+        <DocGiaForm
+          :docgia="docgia"
+          @them="themDocGia"
+          @capnhat="capNhatDocGia"
+          @cancel="closeForm"
+        />
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white py-2">
+        <strong>
+          <i class="fa-solid fa-list me-1"></i> Danh sách độc giả
+        </strong>
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table table-bordered table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Mã</th>
+              <th>Họ tên</th>
+              <th>Ngày sinh</th>
+              <th>Phái</th>
+              <th>Địa chỉ</th>
+              <th>Điện thoại</th>
+              <th style="width: 110px">Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="dg in docgias" :key="dg.MaDocGia">
+              <td>{{ dg.MaDocGia }}</td>
+              <td>{{ dg.HoLot }} {{ dg.Ten }}</td>
+              <td>{{ dg.NgaySinh }}</td>
+              <td>{{ dg.Phai }}</td>
+              <td>{{ dg.DiaChi }}</td>
+              <td>{{ dg.DienThoai }}</td>
+
+              <td>
+                <button
+                  class="btn btn-sm btn-warning me-1"
+                  @click="editDocGia(dg)"
+                >
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+
+                <button
+                  class="btn btn-sm btn-danger"
+                  @click="deleteDocGia(dg.MaDocGia)"
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+            <tr v-if="docgias.length === 0">
+              <td colspan="7" class="text-center py-3 text-muted">
+                Không có độc giả nào.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -74,6 +119,7 @@ export default {
         Password: "",
         old: "",
       },
+      isFormVisible: false,
     };
   },
   methods: {
@@ -139,6 +185,7 @@ export default {
         old: dg.MaDocGia,
         oldPassword: dg.Password,
       };
+      this.isFormVisible = true;
     },
     async deleteDocGia(id) {
       if (confirm("Xóa độc giả này?")) {
@@ -162,6 +209,14 @@ export default {
         DienThoai: "",
         Password: "",
       };
+    },
+    toggleForm() {
+      this.isFormVisible = !this.isFormVisible;
+    },
+
+    closeForm() {
+      this.resetForm();
+      this.isFormVisible = false;
     },
   },
   mounted() {

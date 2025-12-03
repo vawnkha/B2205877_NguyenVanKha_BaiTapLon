@@ -1,41 +1,79 @@
 <template>
-  <div>
-    <h4>Quản lý nhà xuất bản</h4>
+  <div class="container-fluid">
+    <div class="d-flex align-items-center mb-3">
+      <h4 class="mb-0">
+        <i class="fa-solid fa-building me-2"></i> Quản lý nhà xuất bản
+      </h4>
+    </div>
 
-    <InputSearch v-model="searchText" @submit="timKiem" />
+    <div class="mb-3">
+      <InputSearch v-model="searchText" @submit="timKiem" />
+    </div>
 
-    <NXBForm
-      :nxb="nxb"
-      @them="themNXB"
-      @capnhat="capNhatNXB"
-      @cancel="resetForm"
-    />
+    <div class="card shadow-sm mb-4">
+      <div
+        class="card-header bg-primary text-white py-2 d-flex align-items-center justify-content-between"
+        style="cursor: pointer"
+        @click="toggleForm"
+      >
+        <strong>
+          <i class="fa-solid fa-pencil me-1"></i>
+          {{ nxb.old ? "Cập nhật NXB" : "Thêm NXB" }}
+        </strong>
 
-    <table class="table table-bordered table-striped">
-      <thead>
-        <tr>
-          <th>Mã NXB</th>
-          <th>Tên NXB</th>
-          <th>Địa chỉ</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="p in danhSachNXB" :key="p._id">
-          <td>{{ p.MaNXB }}</td>
-          <td>{{ p.TenNXB }}</td>
-          <td>{{ p.DiaChi }}</td>
-          <td>
-            <button class="btn btn-sm btn-warning me-2" @click="editNXB(p)">
-              Sửa
-            </button>
-            <button class="btn btn-sm btn-danger" @click="xoaNXB(p.MaNXB)">
-              Xóa
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <i class="fa-solid" :class="isFormVisible ? 'fa-minus' : 'fa-plus'"></i>
+      </div>
+
+      <div class="card-body" v-show="isFormVisible">
+        <NXBForm
+          :nxb="nxb"
+          @them="themNXB"
+          @capnhat="capNhatNXB"
+          @cancel="closeForm"
+        />
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white py-2">
+        <strong> <i class="fa-solid fa-list me-1"></i> Danh sách NXB </strong>
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table table-bordered table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Mã NXB</th>
+              <th>Tên NXB</th>
+              <th>Địa chỉ</th>
+              <th style="width: 110px">Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="p in danhSachNXB" :key="p._id">
+              <td>{{ p.MaNXB }}</td>
+              <td>{{ p.TenNXB }}</td>
+              <td>{{ p.DiaChi }}</td>
+              <td>
+                <button class="btn btn-sm btn-warning me-1" @click="editNXB(p)">
+                  <i class="fa-solid fa-pen"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" @click="xoaNXB(p.MaNXB)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+            <tr v-if="danhSachNXB.length === 0">
+              <td colspan="4" class="text-center py-3 text-muted">
+                Không có nhà xuất bản nào.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -57,6 +95,7 @@ export default {
         DiaChi: "",
         old: "",
       },
+      isFormVisible: false,
     };
   },
   methods: {
@@ -102,6 +141,7 @@ export default {
     },
     editNXB(nxb) {
       this.nxb = { ...nxb, old: nxb.MaNXB };
+      this.isFormVisible = true;
     },
     async xoaNXB(id) {
       if (confirm("Bạn có chắc muốn xoá không?")) {
@@ -115,6 +155,14 @@ export default {
         TenNXB: "",
         DiaChi: "",
       };
+    },
+    toggleForm() {
+      this.isFormVisible = !this.isFormVisible;
+    },
+
+    closeForm() {
+      this.resetForm();
+      this.isFormVisible = false;
     },
   },
   mounted() {

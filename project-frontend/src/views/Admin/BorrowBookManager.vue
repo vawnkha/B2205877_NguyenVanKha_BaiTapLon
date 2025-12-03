@@ -1,45 +1,85 @@
 <template>
-  <div>
-    <h4>Quản lý phiếu mượn sách</h4>
+  <div class="container-fluid">
+    <div class="d-flex align-items-center mb-3">
+      <h4 class="mb-0">
+        <i class="fa-solid fa-book-reader me-2"></i> Quản lý phiếu mượn sách
+      </h4>
+    </div>
 
-    <InputSearch v-model="searchText" @submit="timKiem" />
+    <div class="mb-3">
+      <InputSearch v-model="searchText" @submit="timKiem" />
+    </div>
 
-    <FormMuonSach
-      :phieu="phieu"
-      @them="themPhieu"
-      @capnhat="capNhatPhieu"
-      @cancel="resetForm"
-    />
+    <div class="card shadow-sm mb-4">
+      <div
+        class="card-header bg-primary text-white py-2 d-flex align-items-center justify-content-between"
+        style="cursor: pointer"
+        @click="toggleForm"
+      >
+        <strong>
+          <i class="fa-solid fa-pencil me-1"></i>
+          {{ phieu.old ? "Cập nhật phiếu mượn" : "Thêm phiếu mượn" }}
+        </strong>
 
-    <table class="table table-bordered table-striped mt-3">
-      <thead>
-        <tr>
-          <th>Mã độc giả</th>
-          <th>Mã sách</th>
-          <th>Ngày mượn</th>
-          <th>Ngày trả</th>
-          <th>Trạng thái</th>
-          <th>Thao tác</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="p in phieus" :key="p._id">
-          <td>{{ p.MaDocGia }}</td>
-          <td>{{ p.MaSach }}</td>
-          <td>{{ p.NgayMuon }}</td>
-          <td>{{ p.NgayTra }}</td>
-          <td>{{ p.TrangThai }}</td>
-          <td>
-            <button class="btn btn-sm btn-info me-2" @click="editPhieu(p)">
-              Xem
-            </button>
-            <button class="btn btn-sm btn-danger" @click="xoaPhieu(p._id)">
-              Xóa
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <i class="fa-solid" :class="isFormVisible ? 'fa-minus' : 'fa-plus'"></i>
+      </div>
+
+      <div class="card-body" v-show="isFormVisible">
+        <FormMuonSach
+          :phieu="phieu"
+          @them="themPhieu"
+          @capnhat="capNhatPhieu"
+          @cancel="closeForm"
+        />
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-header bg-secondary text-white py-2">
+        <strong>
+          <i class="fa-solid fa-list me-1"></i> Danh sách phiếu mượn
+        </strong>
+      </div>
+
+      <div class="card-body p-0">
+        <table class="table table-bordered table-striped mb-0">
+          <thead class="table-light">
+            <tr>
+              <th>Mã độc giả</th>
+              <th>Mã sách</th>
+              <th>Ngày mượn</th>
+              <th>Ngày trả</th>
+              <th>Trạng thái</th>
+              <th style="width: 110px">Thao tác</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr v-for="p in phieus" :key="p._id">
+              <td>{{ p.MaDocGia }}</td>
+              <td>{{ p.MaSach }}</td>
+              <td>{{ p.NgayMuon }}</td>
+              <td>{{ p.NgayTra }}</td>
+              <td>{{ p.TrangThai }}</td>
+              <td>
+                <button class="btn btn-sm btn-info me-1" @click="editPhieu(p)">
+                  <i class="fa-solid fa-eye"></i>
+                </button>
+                <button class="btn btn-sm btn-danger" @click="xoaPhieu(p._id)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+
+            <tr v-if="phieus.length === 0">
+              <td colspan="6" class="text-center py-3 text-muted">
+                Không có phiếu mượn nào.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -65,6 +105,7 @@ export default {
         _id: null,
         oldAct: "",
       },
+      isFormVisible: false,
     };
   },
   methods: {
@@ -109,6 +150,7 @@ export default {
     },
     editPhieu(p) {
       this.phieu = { ...p, oldAct: p.TrangThai };
+      this.isFormVisible = true;
     },
     async xoaPhieu(id) {
       if (confirm("Bạn có chắc muốn xóa phiếu mượn này?")) {
@@ -131,6 +173,14 @@ export default {
         TrangThai: "Chờ duyệt",
         _id: null,
       };
+    },
+    toggleForm() {
+      this.isFormVisible = !this.isFormVisible;
+    },
+
+    closeForm() {
+      this.resetForm();
+      this.isFormVisible = false;
     },
   },
   mounted() {
