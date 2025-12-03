@@ -38,7 +38,8 @@
 <script>
 import InputSearch from "@/components/InputSearch.vue";
 import TraSachForm from "@/components/ReturnBookForm.vue";
-import MuonSachService from "@/services/borrow_book.service";
+import BorrowBookService from "@/services/borrow_book.service";
+import BookService from "@/services/book.service";
 
 export default {
   components: { InputSearch, TraSachForm },
@@ -52,7 +53,7 @@ export default {
   },
   methods: {
     async fetchPhieus() {
-      const all = await MuonSachService.getAll();
+      const all = await BorrowBookService.getAll();
       this.allPhieus = all.filter(
         (p) => p.TrangThai === "Đã duyệt" && !p.NgayTraThuc
       );
@@ -95,7 +96,8 @@ export default {
       };
 
       try {
-        await MuonSachService.update(data._id, payload);
+        await BorrowBookService.update(data._id, payload);
+        await BookService.addQuantity(data.MaSach, { quantity: 1 });
         alert("Xác nhận trả sách thành công.");
         this.fetchPhieus();
         this.resetForm();

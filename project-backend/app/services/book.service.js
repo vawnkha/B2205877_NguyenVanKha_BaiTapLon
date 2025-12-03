@@ -97,6 +97,25 @@ class BookService {
     );
     return result.value;
   }
+
+  async addQuantity(masach, quantityToAdd) {
+    if (typeof quantityToAdd !== "number" || quantityToAdd <= 0) {
+      throw new Error("Giá trị cần cộng phải là một số dương");
+    }
+
+    const book = await this.Book.findOne({ MaSach: masach });
+    if (!book) {
+      throw new Error("Không tìm thấy sách");
+    }
+
+    const result = await this.Book.findOneAndUpdate(
+      { MaSach: masach },
+      { $inc: { SoQuyen: quantityToAdd } },
+      { returnDocument: "after" }
+    );
+
+    return result.value;
+  }
 }
 
 module.exports = BookService;

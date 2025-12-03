@@ -112,3 +112,25 @@ exports.deductQuantity = async (req, res, next) => {
     );
   }
 };
+
+exports.addQuantity = async (req, res, next) => {
+  const { quantity } = req.body;
+
+  if (typeof quantity !== "number" || quantity <= 0) {
+    return next(new ApiError(400, "Số lượng cần cộng phải là số dương"));
+  }
+
+  try {
+    const service = new BookService(MongoDB.client);
+    const book = await service.addQuantity(req.params.id, quantity);
+
+    return res.send({
+      message: "Đã cộng số lượng thành công",
+      book,
+    });
+  } catch (error) {
+    return next(
+      new ApiError(500, error.message || "Lỗi khi cộng số lượng sách")
+    );
+  }
+};

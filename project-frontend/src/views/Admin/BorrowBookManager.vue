@@ -46,8 +46,8 @@
 <script>
 import FormMuonSach from "@/components/BorrowBookForm.vue";
 import InputSearch from "@/components/InputSearch.vue";
-import MuonSachService from "@/services/borrow_book.service";
-import Sach from "@/services/book.service";
+import BorrowBookService from "@/services/borrow_book.service";
+import BookService from "@/services/book.service";
 
 export default {
   components: { FormMuonSach, InputSearch },
@@ -69,7 +69,7 @@ export default {
   },
   methods: {
     async fetchPhieus() {
-      this.allPhieus = await MuonSachService.getAll();
+      this.allPhieus = await BorrowBookService.getAll();
       this.phieus = this.allPhieus;
     },
     timKiem() {
@@ -82,9 +82,9 @@ export default {
     },
     async themPhieu(data) {
       try {
-        await MuonSachService.create(data);
+        await BorrowBookService.create(data);
         if (data.TrangThai == "Đã duyệt") {
-          await Sach.updateNumber(data.MaSach, { soLuong: 1 });
+          await BookService.deductQuantity(data.MaSach, { quantity: 1 });
         }
         alert("Thêm phiếu thành công");
         this.fetchPhieus();
@@ -94,12 +94,12 @@ export default {
     },
     async capNhatPhieu(data) {
       try {
-        await MuonSachService.update(data._id, data);
+        await BorrowBookService.update(data._id, data);
         if (
           data.TrangThai == "Đã duyệt" &&
           this.phieu.TrangThai != "Đã duyệt"
         ) {
-          await Sach.updateNumber(data.MaSach, { soLuong: 1 });
+          await BookService.deductQuantity(data.MaSach, { quantity: 1 });
         }
         alert("Cập nhật thành công");
         this.fetchPhieus();
@@ -113,7 +113,7 @@ export default {
     async xoaPhieu(id) {
       if (confirm("Bạn có chắc muốn xóa phiếu mượn này?")) {
         try {
-          await MuonSachService.delete(id);
+          await BorrowBookService.delete(id);
           alert("Đã xóa thành công");
           this.fetchPhieus();
           this.resetForm();

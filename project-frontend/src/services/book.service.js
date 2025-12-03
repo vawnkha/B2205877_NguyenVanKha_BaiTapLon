@@ -33,8 +33,12 @@ class BookService {
     return (await this.api.delete("/")).data;
   }
 
-  async updateNumber(masach, data) {
+  async deductQuantity(masach, data) {
     return (await this.api.put(`/cap-nhat-so-luong/${masach}`, data)).data;
+  }
+
+  async addQuantity(masach, data) {
+    return (await this.api.put(`/tra-sach/${masach}`, data)).data;
   }
 }
 

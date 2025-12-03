@@ -6,5 +6,6 @@ router.route("/").get(book.findAll).post(book.create).delete(book.deleteAll);
 router.route("/:id").get(book.findOne).put(book.update).delete(book.delete);
 router.route("/tim-kiem").get(book.search);
 router.route("/cap-nhat-so-luong/:id").put(book.deductQuantity);
+router.route("/tra-sach/:id").put(book.addQuantity);
 
 module.exports = router;
