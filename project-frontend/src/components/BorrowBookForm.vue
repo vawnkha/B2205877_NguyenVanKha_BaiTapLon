@@ -138,12 +138,20 @@ export default {
   },
   computed: {
     isTrangThaiDisabled() {
+      if (!this.local._id) return false;
       return this.local.TrangThai === "Đã trả";
     },
+
     trangThaiOptions() {
+      if (!this.local._id) {
+        return ["Đã duyệt", "Từ chối"];
+      }
+
       const current = this.local.TrangThai;
+
       if (current === "Chờ duyệt") return ["Đã duyệt", "Từ chối"];
       if (current === "Chờ trả") return ["Đã trả", "Từ chối"];
+
       return [current];
     },
   },
