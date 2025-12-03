@@ -1,24 +1,51 @@
 <template>
   <div>
-    <h4><i class="fa-solid fa-book-open"></i> Danh sách sách</h4>
+    <h4 class="mb-4 text-primary fw-bold">
+      <i class="fa-solid fa-book-open me-2"></i> Danh sách sách
+    </h4>
 
-    <InputSearch v-model="searchText" @submit="timKiemSach" />
+    <div class="mb-4">
+      <InputSearch v-model="searchText" @submit="timKiemSach" />
+    </div>
 
-    <div class="row">
-      <div v-for="book in books" :key="book.MaSach" class="col-md-4 mb-3">
-        <div class="card h-100">
-          <div class="card-body">
-            <h5 class="card-title">{{ book.TenSach }}</h5>
-            <p class="card-text">
-              Tác giả: {{ book.NguonGoc }}<br />
-              Năm xuất bản: {{ book.NamXuatBan }}<br />
-              Số lượng: {{ book.SoQuyen }}
-            </p>
+    <div class="row g-4">
+      <div
+        v-for="book in books"
+        :key="book.MaSach"
+        class="col-sm-6 col-md-4 col-lg-3"
+      >
+        <div class="card shadow-sm border-0 h-100 book-card">
+          <div
+            class="card-body d-flex flex-column align-items-center text-center"
+          >
+            <!-- Tên sách căn giữa, màu sắc nổi bật -->
+            <h5 class="card-title fw-bold mb-3 book-title">
+              {{ book.TenSach }}
+            </h5>
+
+            <ul
+              class="list-unstyled small text-muted flex-grow-1 text-start w-100"
+            >
+              <li>
+                <i class="fa-solid fa-user-pen me-1"></i> Tác giả:
+                <b>{{ book.NguonGoc }}</b>
+              </li>
+              <li>
+                <i class="fa-solid fa-calendar-day me-1"></i> Năm XB:
+                <b>{{ book.NamXuatBan }}</b>
+              </li>
+              <li>
+                <i class="fa-solid fa-layer-group me-1"></i> Số lượng:
+                <b>{{ book.SoQuyen }}</b>
+              </li>
+            </ul>
+
             <button
-              class="btn btn-primary w-100"
+              class="btn btn-primary mt-auto w-100 rounded-pill btn-muon"
               @click="muonSach(book.MaSach)"
               :disabled="book.SoQuyen <= 0"
             >
+              <i class="fa-solid fa-book-open me-1"></i>
               Mượn sách
             </button>
           </div>
@@ -33,39 +60,45 @@
       aria-hidden="true"
       ref="modalMuonSach"
     >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Thông tin mượn sách</h5>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-3 shadow-lg">
+          <div class="modal-header bg-primary text-white">
+            <h5 class="modal-title">
+              <i class="fa-solid fa-handshake-simple me-1"></i>
+              Thông tin mượn sách
+            </h5>
             <button
               type="button"
-              class="btn-close"
+              class="btn-close btn-close-white"
               data-bs-dismiss="modal"
               @click="close"
             ></button>
           </div>
 
           <div class="modal-body">
-            <label>Ngày mượn:</label>
+            <label class="fw-semibold mb-1">Ngày mượn:</label>
             <input
               type="date"
               v-model="formNgayMuon"
               class="form-control mb-3"
             />
 
-            <label>Ngày trả dự kiến:</label>
+            <label class="fw-semibold mb-1">Ngày trả dự kiến:</label>
             <input type="date" v-model="formNgayTra" class="form-control" />
           </div>
 
           <div class="modal-footer">
             <button
-              class="btn btn-secondary"
+              class="btn btn-secondary rounded-pill px-4"
               data-bs-dismiss="modal"
               @click="close"
             >
               Hủy
             </button>
-            <button class="btn btn-primary" @click="xacNhanMuonSach">
+            <button
+              class="btn btn-primary rounded-pill px-4"
+              @click="xacNhanMuonSach"
+            >
               Xác nhận
             </button>
           </div>
@@ -89,7 +122,6 @@ export default {
       searchText: "",
       allBooks: [],
       books: [],
-
       maSachDangMuon: null,
       formNgayMuon: "",
       formNgayTra: "",
@@ -99,7 +131,6 @@ export default {
 
   async mounted() {
     await this.fetchBooks();
-
     this.modalMuonSach = new Modal(this.$refs.modalMuonSach);
   },
 
@@ -202,4 +233,43 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.book-card {
+  transition: 0.25s ease;
+  border-radius: 14px !important;
+  padding-top: 6px;
+  text-align: center;
+}
+
+.book-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+.book-title {
+  font-size: 1.2rem;
+  background: linear-gradient(90deg, #ff7e5f, #feb47b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+.btn-muon {
+  font-weight: 600;
+  padding: 10px 0;
+  transition: 0.25s;
+}
+
+.btn-muon:disabled {
+  background-color: #bfbfbf !important;
+  border: none;
+}
+
+.btn-muon:not(:disabled):hover {
+  opacity: 0.9;
+}
+
+.modal-content {
+  border-radius: 16px !important;
+}
+</style>
