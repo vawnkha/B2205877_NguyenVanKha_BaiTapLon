@@ -1,9 +1,12 @@
 <template>
   <div class="container-fluid">
-    <div class="d-flex align-items-center mb-3">
-      <h4 class="mb-0">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0 d-flex align-items-center">
         <i class="fa-solid fa-rotate-left me-2"></i> Quản lý trả sách
       </h4>
+      <button class="btn btn-success" @click="exportExcel">
+        <i class="fa-solid fa-file-excel me-1"></i> Xuất Excel
+      </button>
     </div>
 
     <div class="mb-3">
@@ -84,6 +87,7 @@ import InputSearch from "@/components/InputSearch.vue";
 import TraSachForm from "@/components/ReturnBookForm.vue";
 import BorrowBookService from "@/services/borrow_book.service";
 import BookService from "@/services/book.service";
+import * as XLSX from "xlsx";
 
 export default {
   components: { InputSearch, TraSachForm },
@@ -159,6 +163,21 @@ export default {
     closeForm() {
       this.resetForm();
       this.isFormVisible = false;
+    },
+    exportExcel() {
+      const data = this.phieus.map((p) => ({
+        "Mã độc giả": p.MaDocGia,
+        "Mã sách": p.MaSach,
+        "Ngày mượn": p.NgayMuon,
+        "Ngày trả": p.NgayTra,
+        "Trạng thái": p.TrangThai,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "DanhSachDangMuon");
+
+      XLSX.writeFile(workbook, "DanhSachDangMuon.xlsx");
     },
   },
   mounted() {
