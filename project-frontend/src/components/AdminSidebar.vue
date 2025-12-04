@@ -5,7 +5,7 @@
     <div>
       <div class="text-center mb-4">
         <img :src="logo" class="img-fluid w-75 mt-2 mb-3 logo" alt="Logo" />
-        <p class="fs-4 fw-semibold">Hello, admin</p>
+        <p class="fs-5 fw-semibold">{{ currentUserName }}</p>
       </div>
 
       <ul class="list-unstyled fs-5">
@@ -64,6 +64,12 @@ export default {
         },
       ],
     };
+  },
+  computed: {
+    currentUserName() {
+      const data = JSON.parse(localStorage.getItem("user"));
+      return data?.user?.HoTenNV || "Admin";
+    },
   },
   methods: {
     logout() {

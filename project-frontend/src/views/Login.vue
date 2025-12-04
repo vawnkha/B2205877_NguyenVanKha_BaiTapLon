@@ -31,7 +31,7 @@ export default {
     async handleLogin(form) {
       try {
         const res = await LoginService.login(form.username, form.password);
-        const user = res;
+        const user = res || res.data.user;
 
         localStorage.setItem("user", JSON.stringify(user));
 
