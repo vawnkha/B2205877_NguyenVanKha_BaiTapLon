@@ -1,7 +1,13 @@
 <template>
   <div class="container-fluid">
-    <div class="d-flex align-items-center mb-3">
-      <h4 class="mb-0"><i class="fa-solid fa-book me-2"></i> Quản lý sách</h4>
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0 d-flex align-items-center">
+        <i class="fa-solid fa-book me-2"></i> Quản lý sách
+      </h4>
+
+      <button class="btn btn-success" @click="exportExcel">
+        <i class="fa-solid fa-file-excel me-1"></i> Xuất Excel
+      </button>
     </div>
 
     <div class="mb-3">
@@ -97,6 +103,7 @@ import SachForm from "@/components/BookForm.vue";
 import BookService from "@/services/book.service";
 import PublisherService from "@/services/publisher.service";
 import InputSearch from "@/components/InputSearch.vue";
+import * as XLSX from "xlsx";
 
 export default {
   components: {
@@ -207,6 +214,23 @@ export default {
     closeForm() {
       this.resetForm();
       this.isFormVisible = false;
+    },
+    exportExcel() {
+      const data = this.sachs.map((s) => ({
+        "Mã sách": s.MaSach,
+        "Tên sách": s.TenSach,
+        Giá: s.DonGia,
+        "Số quyển": s.SoQuyen,
+        "Năm xuất bản": s.NamXuatBan,
+        "Nhà xuất bản": s.MaNXB,
+        "Tác giả": s.NguonGoc,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+
+      XLSX.utils.book_append_sheet(workbook, worksheet, "DanhSachSach");
+      XLSX.writeFile(workbook, "DanhSachSach.xlsx");
     },
   },
   mounted() {

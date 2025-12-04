@@ -1,9 +1,12 @@
 <template>
   <div class="container-fluid">
-    <div class="d-flex align-items-center mb-3">
-      <h4 class="mb-0">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0 d-flex align-items-center">
         <i class="fa-solid fa-users-gear me-2"></i> Quản lý nhân viên
       </h4>
+      <button class="btn btn-success" @click="exportExcel">
+        <i class="fa-solid fa-file-excel me-1"></i> Xuất Excel
+      </button>
     </div>
 
     <div class="mb-3">
@@ -94,6 +97,7 @@
 import NhanVienForm from "@/components/EmployeeForm.vue";
 import EmployeeService from "@/services/employee.service";
 import InputSearch from "@/components/InputSearch.vue";
+import * as XLSX from "xlsx";
 
 export default {
   components: { NhanVienForm, InputSearch },
@@ -216,6 +220,21 @@ export default {
     closeForm() {
       this.resetForm();
       this.isFormVisible = false;
+    },
+    exportExcel() {
+      const data = this.nhanviens.map((nv) => ({
+        "Mã nhân viên": nv.MSNV,
+        "Họ tên": nv.HoTenNV,
+        "Chức vụ": nv.Chucvu,
+        "Địa chỉ": nv.Diachi,
+        "Số điện thoại": nv.SoDienThoai,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "DanhSachNhanVien");
+
+      XLSX.writeFile(workbook, "DanhSachNhanVien.xlsx");
     },
   },
   mounted() {

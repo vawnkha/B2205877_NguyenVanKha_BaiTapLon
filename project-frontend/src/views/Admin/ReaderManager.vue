@@ -1,9 +1,12 @@
 <template>
   <div class="container-fluid">
-    <div class="d-flex align-items-center mb-3">
-      <h4 class="mb-0">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0 d-flex align-items-center">
         <i class="fa-solid fa-users-viewfinder me-2"></i> Quản lý độc giả
       </h4>
+      <button class="btn btn-success" @click="exportExcel">
+        <i class="fa-solid fa-file-excel me-1"></i> Xuất Excel
+      </button>
     </div>
 
     <div class="mb-3">
@@ -97,6 +100,7 @@
 import DocGiaForm from "@/components/ReaderForm.vue";
 import ReaderService from "@/services/reader.service";
 import InputSearch from "@/components/InputSearch.vue";
+import * as XLSX from "xlsx";
 
 export default {
   components: {
@@ -217,6 +221,22 @@ export default {
     closeForm() {
       this.resetForm();
       this.isFormVisible = false;
+    },
+    exportExcel() {
+      const data = this.docgias.map((dg) => ({
+        "Mã độc giả": dg.MaDocGia,
+        "Họ tên": dg.HoLot + " " + dg.Ten,
+        "Ngày sinh": dg.NgaySinh,
+        Phái: dg.Phai,
+        "Địa chỉ": dg.DiaChi,
+        "Số điện thoại": dg.DienThoai,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "DanhSachDocGia");
+
+      XLSX.writeFile(workbook, "DanhSachDocGia.xlsx");
     },
   },
   mounted() {

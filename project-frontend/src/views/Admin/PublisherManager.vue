@@ -1,9 +1,12 @@
 <template>
   <div class="container-fluid">
-    <div class="d-flex align-items-center mb-3">
-      <h4 class="mb-0">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+      <h4 class="mb-0 d-flex align-items-center">
         <i class="fa-solid fa-building me-2"></i> Quản lý nhà xuất bản
       </h4>
+      <button class="btn btn-success" @click="exportExcel">
+        <i class="fa-solid fa-file-excel me-1"></i> Xuất Excel
+      </button>
     </div>
 
     <div class="mb-3">
@@ -81,6 +84,7 @@
 import NXBForm from "@/components/PublisherForm.vue";
 import NhaXuatBanService from "@/services/publisher.service";
 import InputSearch from "@/components/InputSearch.vue";
+import * as XLSX from "xlsx";
 
 export default {
   components: { NXBForm, InputSearch },
@@ -163,6 +167,20 @@ export default {
     closeForm() {
       this.resetForm();
       this.isFormVisible = false;
+    },
+
+    exportExcel() {
+      const data = this.danhSachNXB.map((p) => ({
+        "Mã NXB": p.MaNXB,
+        "Tên NXB": p.TenNXB,
+        "Địa chỉ": p.DiaChi,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "DanhSachNXB");
+
+      XLSX.writeFile(workbook, "DanhSachNXB.xlsx");
     },
   },
   mounted() {
