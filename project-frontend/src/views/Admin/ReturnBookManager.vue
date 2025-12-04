@@ -152,7 +152,7 @@ export default {
         await BookService.addQuantity(data.MaSach, { quantity: 1 });
         alert("Xác nhận trả sách thành công.");
         this.fetchPhieus();
-        // this.resetForm();
+        this.resetForm();
       } catch (err) {
         alert("Lỗi khi xác nhận trả sách.");
       }

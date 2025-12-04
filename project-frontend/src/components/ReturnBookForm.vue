@@ -128,35 +128,45 @@ export default {
   watch: {
     phieu: {
       immediate: true,
-      handler(newVal) {
+      async handler(newVal) {
         this.local = { ...newVal };
+
         if (!this.local.NgayTraThuc) {
           this.local.NgayTraThuc = new Date().toISOString().split("T")[0];
         }
+
+        await this.tinhTienPhat();
+      },
+    },
+    "local.NgayTraThuc": {
+      async handler() {
+        await this.tinhTienPhat();
       },
     },
   },
-
   methods: {
-    async xacNhanTra() {
+    async tinhTienPhat() {
+      if (!this.local.NgayTraThuc || !this.local.NgayTra) return;
+
       try {
         const book = await BookService.get(this.local.MaSach);
         const giaSach = book?.DonGia;
 
-        const today = new Date(this.local.NgayTraThuc || new Date());
+        const today = new Date(this.local.NgayTraThuc);
         const ngayTra = new Date(this.local.NgayTra);
         const diffTime = today.getTime() - ngayTra.getTime();
         const lateDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
         this.local.TienPhatTreHan =
           lateDays > 0 ? lateDays * giaSach * 0.05 : 0;
-
-        this.$emit("xacnhan", this.local);
       } catch (error) {
         console.error("Không thể lấy thông tin sách:", error);
         this.local.TienPhatTreHan = 0;
-        this.$emit("xacnhan", this.local);
       }
+    },
+    async xacNhanTra() {
+      await this.tinhTienPhat();
+      this.$emit("xacnhan", this.local);
     },
   },
 };
