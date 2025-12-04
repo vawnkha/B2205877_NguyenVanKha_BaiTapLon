@@ -223,6 +223,10 @@ export default {
       this.isFormVisible = false;
     },
     exportExcel() {
+      if (this.docgias.length === 0) {
+        alert("Không có dữ liệu để tạo tập tin Excel.");
+        return;
+      }
       const data = this.docgias.map((dg) => ({
         "Mã độc giả": dg.MaDocGia,
         "Họ tên": dg.HoLot + " " + dg.Ten,

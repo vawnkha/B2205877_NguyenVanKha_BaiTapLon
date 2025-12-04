@@ -216,6 +216,10 @@ export default {
       this.isFormVisible = false;
     },
     exportExcel() {
+      if (this.sachs.length === 0) {
+        alert("Không có dữ liệu để tạo tập tin Excel.");
+        return;
+      }
       const data = this.sachs.map((s) => ({
         "Mã sách": s.MaSach,
         "Tên sách": s.TenSach,

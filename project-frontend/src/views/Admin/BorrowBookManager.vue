@@ -190,6 +190,10 @@ export default {
     },
 
     exportExcel() {
+      if (this.phieus.length === 0) {
+        alert("Không có dữ liệu để tạo tập tin Excel.");
+        return;
+      }
       const data = this.phieus.map((p) => ({
         "Mã độc giả": p.MaDocGia,
         "Mã sách": p.MaSach,

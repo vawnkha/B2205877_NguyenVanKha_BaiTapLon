@@ -222,6 +222,10 @@ export default {
       this.isFormVisible = false;
     },
     exportExcel() {
+      if (this.nhanviens.length === 0) {
+        alert("Không có dữ liệu để tạo tập tin Excel.");
+        return;
+      }
       const data = this.nhanviens.map((nv) => ({
         "Mã nhân viên": nv.MSNV,
         "Họ tên": nv.HoTenNV,

@@ -170,6 +170,10 @@ export default {
     },
 
     exportExcel() {
+      if (this.danhSachNXB.length === 0) {
+        alert("Không có dữ liệu để tạo tập tin Excel.");
+        return;
+      }
       const data = this.danhSachNXB.map((p) => ({
         "Mã NXB": p.MaNXB,
         "Tên NXB": p.TenNXB,
