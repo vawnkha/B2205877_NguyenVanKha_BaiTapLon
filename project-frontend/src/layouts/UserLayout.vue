@@ -17,7 +17,7 @@
 
           <template v-if="isLoggedIn">
             <button @click="logout" class="btn nav-btn logout">
-              Đăng xuất
+              <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </button>
           </template>
 
@@ -59,41 +59,40 @@ export default {
 </script>
 
 <style>
-/* Toàn bộ khung layout */
 .user-layout {
   background-color: #f2f2f2;
   min-height: 100vh;
 }
 
-/* Navbar màu xám đậm */
 .bg-dark {
-  background-color: #3a3a3a !important;
+  background: linear-gradient(180deg, #312949, #0747c6);
 }
 
-/* Logo thương hiệu */
 .navbar-brand {
   font-size: 1.3rem;
 }
 
-/* Button hiện đại tông xám */
 .nav-btn {
-  border-radius: 8px !important;
+  border-radius: 18px !important;
   border: 1px solid #bfbfbf !important;
   color: #e0e0e0 !important;
-  background-color: #4d4d4d !important;
+  background-color: #077bff !important;
   padding: 6px 14px !important;
   transition: 0.2s ease !important;
   font-weight: 500 !important;
 }
 
 .nav-btn:hover {
-  background-color: #6b6b6b !important;
+  background-color: #0056b3 !important;
   border-color: #d6d6d6 !important;
   color: white !important;
 }
 
-/* Nút đăng xuất dễ nhận biết hơn */
 .logout {
-  background-color: #595959 !important;
+  background-color: white !important;
+  color: black !important;
+}
+.logout:hover {
+  background-color: rgb(223, 2, 2) !important;
 }
 </style>

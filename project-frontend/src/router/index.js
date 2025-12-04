@@ -16,6 +16,7 @@ const routes = [
   {
     path: "/",
     name: "/",
+    meta: { requiresAuth: true, role: "user" },
     component: UserLayout,
   },
   {
