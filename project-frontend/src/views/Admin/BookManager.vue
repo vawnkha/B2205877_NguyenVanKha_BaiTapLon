@@ -63,7 +63,7 @@
             <tr v-for="s in sachs" :key="s._id">
               <td>{{ s.MaSach }}</td>
               <td>{{ s.TenSach }}</td>
-              <td>{{ s.DonGia }}</td>
+              <td>{{ Number(s.DonGia).toLocaleString("vi-VN") }} đ</td>
               <td>{{ s.SoQuyen }}</td>
               <td>{{ s.NamXuatBan }}</td>
               <td>{{ s.MaNXB }}</td>
