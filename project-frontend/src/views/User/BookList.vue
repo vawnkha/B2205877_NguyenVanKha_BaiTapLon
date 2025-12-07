@@ -171,7 +171,9 @@ export default {
         const danhSachPhieu = await BorrowBookService.findByMaDocGia(maDocGia);
 
         const daMuon = danhSachPhieu.find(
-          (p) => p.MaSach === maSach && p.TrangThai !== "Đã trả"
+          (p) =>
+            p.MaSach === maSach &&
+            ["Chờ duyệt", "Đã duyệt", "Đã mượn"].includes(p.TrangThai)
         );
 
         if (daMuon) {
