@@ -18,7 +18,6 @@
           <div
             class="card-body d-flex flex-column align-items-center text-center"
           >
-            <!-- Tên sách căn giữa, màu sắc nổi bật -->
             <h5 class="card-title fw-bold mb-3 book-title">
               {{ book.TenSach }}
             </h5>
