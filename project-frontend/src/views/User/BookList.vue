@@ -80,10 +80,16 @@
               type="date"
               v-model="formNgayMuon"
               class="form-control mb-3"
+              :min="today"
             />
 
             <label class="fw-semibold mb-1">Ngày trả dự kiến:</label>
-            <input type="date" v-model="formNgayTra" class="form-control" />
+            <input
+              type="date"
+              v-model="formNgayTra"
+              class="form-control"
+              :min="formNgayMuon || today"
+            />
           </div>
 
           <div class="modal-footer">
@@ -125,6 +131,7 @@ export default {
       formNgayMuon: "",
       formNgayTra: "",
       modalMuonSach: null,
+      today: new Date().toISOString().split("T")[0],
     };
   },
 
@@ -198,6 +205,10 @@ export default {
     async xacNhanMuonSach() {
       if (!this.formNgayMuon || !this.formNgayTra) {
         alert("Vui lòng chọn ngày mượn và ngày trả!");
+        return;
+      }
+      if (this.formNgayMuon < this.today) {
+        alert("Ngày mượn phải từ hôm nay trở đi!");
         return;
       }
 
